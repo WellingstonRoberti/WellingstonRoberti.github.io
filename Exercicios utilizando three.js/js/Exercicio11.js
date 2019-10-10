@@ -53,8 +53,8 @@ function LoadModel(){
                 .setMaterials( materials )
                 .setPath( 'IronMan/' )
                 .load( 'IronMan.obj', function ( object ) {
-                    object.position.set(5, -1, 0);
-                    object.scale.set(0.3, 0.3, 0.3);
+                    object.position.set(-5, -1, 0);
+                    object.scale.set(0.03, 0.03, 0.03);
                     object.traverse(function(child){
                         child.castShadow = true;
                     });

@@ -57,7 +57,8 @@ function LoadModel(){
                 .setPath( 'aranha/' )
                 .load( 'Only_Spider_with_Animations_Export.obj', function ( object ) {
                     object.position.set(5, -1, 0);
-                    object.scale.set(0.3, 0.3, 0.3);
+                    object.scale.set(0.01, 0.01, 0.01);
+                    object.rotation.set(0, 15, 0);
                     object.traverse(function(child){
                         child.castShadow = true;
                     });
@@ -84,7 +85,7 @@ var createACube = function() {
 };
 
 var createLight = function () {
-    var spotLight = new THREE.DirectionalLight();
+    var spotLight = new THREE.SpotLight();
     spotLight.position.set(10, 20, 20);
     spotLight.castShadow = true;
     scene.add(spotLight);

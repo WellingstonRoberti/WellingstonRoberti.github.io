@@ -35,23 +35,34 @@ var materialDeMadeira = function() {
 
 };
 
-var ironMan = function(){
-    var mtlLoader = new THREE.MTLLoader();
-    mtlLoader.load('IronMan/IronMan.mtl', function(materials){
-        materials.preload();
+function LoadModel(){
 
-        var loader = new THREE.OBJLoader();
-        loader.setMaterials(materials);
-        loader.load('IronMan/IronMan.obj', function(object) {
-            object.position.set(-5,-1,0);
-            object.scale.x = .03;
-            object.scale.y = .03;
-            object.scale.z = .03;
-            object.traverse(function(child){child.castShadow = true;});
-            scene.add(object); 
-        });
-    });
-};
+    var onProgress = function ( xhr ) {
+        if ( xhr.lengthComputable ) {
+            var percentComplete = xhr.loaded / xhr.total * 100;
+            console.log( Math.round( percentComplete, 2 ) + '% downloaded' );
+        }
+    };
+    var onError = function () { };
+
+    new THREE.MTLLoader()
+        .setPath( 'IronMan/' )
+        .load( 'IronMan.mtl', function ( materials ) {
+            materials.preload();
+            new THREE.OBJLoader()
+                .setMaterials( materials )
+                .setPath( 'IronMan/' )
+                .load( 'IronMan.obj', function ( object ) {
+                    object.position.set(5, -1, 0);
+                    object.scale.set(0.3, 0.3, 0.3);
+                    object.traverse(function(child){
+                        child.castShadow = true;
+                    });
+                    scene.add( object );
+                }, onProgress, onError );
+        } );
+
+}
 var render = function() {
     requestAnimationFrame( render );
     renderer.shadowMap.enabled = true;

@@ -1,0 +1,91 @@
+var scene;
+var camera;
+var renderer;
+var controls;
+
+var init = function() {
+
+    scene = new THREE.Scene();
+    scene.background = new THREE.CubeTextureLoader().load(['imagens/skybox/px.jpg', 'imagens/skybox/nx.jpg', 'imagens/skybox/py.jpg', 'imagens/skybox/ny.jpg', 'imagens/skybox/pz.jpg', 'imagens/skybox/nz.jpg']);
+    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    
+    this.createACube();
+    this.ironMan();
+    this.createPlane();
+    this.createLight();
+    camera.position.z = 6;
+    camera.position.y = 12;
+    camera.rotation.x = 5;
+    controls = new THREE.OrbitControls( camera, renderer.domElement );
+    document.body.appendChild( renderer.domElement );
+    this.render();
+    //console.log(scene);
+};
+
+var materialDeMadeira = function() {
+    var madeiraTexture = new THREE.TextureLoader().load("imagens/madeira.jpg");
+    var madeiraMaterial = new THREE.MeshPhongMaterial();
+
+    madeiraMaterial.map = madeiraTexture;
+
+    return madeiraMaterial;
+
+};
+
+var ironMan = function(){
+    var mtlLoader = new THREE.MTLLoader();
+    mtlLoader.load('IronMan/IronMan.mtl', function(materials){
+        materials.preload();
+
+        var loader = new THREE.OBJLoader();
+        loader.setMaterials(materials);
+        loader.load('IronMan/IronMan.obj', function(object) {
+            object.position.set(-5,-1,0);
+            object.scale.x = .03;
+            object.scale.y = .03;
+            object.scale.z = .03;
+            object.traverse(function(child){child.castShadow = true;});
+            scene.add(object); 
+        });
+    });
+};
+var render = function() {
+    requestAnimationFrame( render );
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.render( scene, camera );
+};
+
+var createACube = function() {
+    var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+    var material = this.materialDeMadeira();
+    cube = new THREE.Mesh( geometry, material );
+    cube.position.set(5,0,0);
+    //cube.rotation.set(10,30,0);
+    cube.castShadow = true;
+    scene.add( cube );
+};
+
+var createLight = function () {
+    var spotLight = new THREE.SpotLight(0xffffff);
+    spotLight.position.set(-20, 20, 20);
+
+    spotLight.castShadow = true;
+
+    scene.add(spotLight);
+};
+
+var createPlane = function() {
+    var planeGeometry = new THREE.PlaneGeometry(20, 20);
+    var planeMaterial = new THREE.MeshLambertMaterial({ color: "darkblue"});
+    plane = new THREE.Mesh(planeGeometry, planeMaterial);
+
+    plane.rotation.x = -0.5 * Math.PI;
+    plane.position.y = -1;
+    plane.receiveShadow = true;
+    scene.add(plane);
+};
+window.onload = this.init;

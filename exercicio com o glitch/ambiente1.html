@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Execício 1 - Básico</title>
+    <meta name="description" content="Execício 1 - Básico">
+    <script src="js/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene shadow="type: pcfsoft">
+  <a-entity id="luz" light="type: point;
+                   castShadow: true;
+                   intensity: 1.5;"
+            position="-4 6 -1.5">
+  </a-entity>
+      <a-plane id ="plano" position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="lightgreen" shadow></a-plane>
+      <a-box id ="box" position="-1 0.5 0" rotation="0 45 0" color="blue" shadow></a-box>
+      <a-sphere id ="sphere" position="0 1.25 -6" radius="0.5" color="red" shadow></a-sphere>
+      <a-cylinder id ="cilindro" position="1 0.75 -2" radius="0.5" height="1.5" color="yellow" shadow></a-cylinder>
+      <a-dodecahedron id ="dodeca" color="purple" position="3 1 -4" shadow></a-dodecahedron>
+      <a-torus-knot id ="torus" color="orange" position="-2.5 2 -5" radius-tubular="0.05" p="7" shadow></a-torus-knot>
+      <a-sky id ="ceu" src="imagens/sky_lightblue.jpg"></a-sky> 
+      <a-entity id="cameraPositionVRMode" position="0 0.4 -4">
+        <a-entity id="camera" camera look-controls></a-entity>
+      </a-entity>
+    </a-scene>
+  </body>
+</html> 

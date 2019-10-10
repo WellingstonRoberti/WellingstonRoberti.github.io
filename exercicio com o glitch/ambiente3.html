@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Execício 3</title>
+    <meta name="description" content="Execício 3">
+    <script src="js/aframe.min.js"></script>
+  </head>
+  <body>
+	<script>
+  AFRAME.registerComponent('sistema-solar', {
+			init: function(){
+				let countX = 3;
+				let planetas = [], sol;
+        let pai = document.createElement('a-entity');
+				let sceneEl = document.querySelector('a-scene');
+        sol = document.createElement('a-entity'); // create the element
+				sol.setAttribute('id', 'Sol');
+				sol.setAttribute('geometry', {
+					primitive: 'sphere',
+          radius: 3
+				});
+        sol.setAttribute('material', 'src: imagens/Sol.jpg; shader: flat');
+				sol.setAttribute('position', '0 0 0');
+        sol.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; easing: linear; dur: '+ getRandomIntInclusive(1000, 100000));
+        pai.appendChild(sol);
+        
+        //planetas
+        let src = [];
+        src[0] = 'imagens/neptune.jpg';
+        src[1] = 'imagens/jupitermap.jpg';
+        src[2] = 'imagens/earthmap1k.jpg';
+        var posicaox =0;
+        var posicaoz =0;
+        for (let i=0; i<countX; i++){
+          planetas[i] = document.createElement('a-entity'); // create the element
+          var scala = getRandomIntInclusive(1, 3);
+          planetas[i].setAttribute('id', 'planeta_'+ i.toString());
+          planetas[i].setAttribute('geometry', {
+            primitive: 'sphere',
+          radius: scala
+          });
+          posicaox += 5 + getRandomIntInclusive(1, 5);
+          posicaoz += 5 + getRandomIntInclusive(1, 5);
+
+          planetas[i].setAttribute('material', 'src: '+ src[i]);
+          planetas[i].setAttribute('position', posicaox.toString() +' 0' +' '+ posicaoz.toString());
+          planetas[i].setAttribute('shadow', '' );
+          planetas[i].setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; easing: linear; dur: '+ getRandomIntInclusive(1000, 100000));
+          let paiplaneta = document.createElement('a-entity');
+          paiplaneta.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; easing: linear; dur: '+ getRandomIntInclusive(1000, 100000));
+          pai.appendChild(paiplaneta);
+          paiplaneta.appendChild(planetas[i]);
+        }
+        sceneEl.appendChild(pai);
+        let camera = document.querySelector('#camerapositionvrmode')
+        camera.setAttribute('position', (posicaox.toString()) +' 10' +' '+ posicaoz.toString());
+        camera.setAttribute('rotation', '0 45 0');
+			}
+		});
+    
+    function getRandomIntInclusive(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+	</script>
+            <a-scene shadow="type: pcfsoft">
+  <a-entity id="luz" light="type: point;
+                   castShadow: true;
+                   intensity: 2;"
+            rotation= "-45 0 0"
+            position="0 0 0">
+  </a-entity>
+      <a-sky id ="ceu" src="imagens/milky.jpg"></a-sky> 
+      <a-entity id="camerapositionvrmode" position="0 0.3 10">
+          <a-entity id="camera" camera="" rotation="0 0 0" look-controls>
+          </a-entity>
+        <a-entity id="sistema-solar" sistema-solar></a-entity>
+    </a-entity>
+
+    </a-scene>
+  </body>
+</html> 

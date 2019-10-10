@@ -13,7 +13,7 @@ var init = function() {
     renderer.setSize( window.innerWidth, window.innerHeight );
     
     this.createACube();
-    this.ironMan();
+    this.LoadModel();
     this.createPlane();
     this.createLight();
     camera.position.z = 6;

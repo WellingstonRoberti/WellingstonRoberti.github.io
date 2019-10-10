@@ -37,7 +37,9 @@ var materialDeMadeira = function() {
 };
 
 
+
 function LoadModel(){
+
     var onProgress = function ( xhr ) {
         if ( xhr.lengthComputable ) {
             var percentComplete = xhr.loaded / xhr.total * 100;
@@ -45,21 +47,24 @@ function LoadModel(){
         }
     };
     var onError = function () { };
+
     new THREE.MTLLoader()
-        .setPath( 'wolf/' )
-        .load( 'Wolf_obj.mtl', function ( materials ) {
+        .setPath( 'aranha/' )
+        .load( 'Only_Spider_with_Animations_Export.mtl', function ( materials ) {
             materials.preload();
             new THREE.OBJLoader()
                 .setMaterials( materials )
-                .setPath( 'wolf/' )
-                .load( 'Wolf_obj.obj', function ( object ) {
-                    object.position.set(5, 0, 0);
+                .setPath( 'aranha/' )
+                .load( 'Only_Spider_with_Animations_Export.obj', function ( object ) {
+                    object.position.set(5, -1, 0);
+                    object.scale.set(0.3, 0.3, 0.3);
                     object.traverse(function(child){
                         child.castShadow = true;
                     });
                     scene.add( object );
                 }, onProgress, onError );
         } );
+
 }
 var render = function() {
     requestAnimationFrame( render );

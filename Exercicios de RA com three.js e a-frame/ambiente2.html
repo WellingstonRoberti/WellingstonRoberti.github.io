@@ -172,45 +172,44 @@
             markerKanji.add(sceneGroupKanji);
 
             //chão para sombra para cada objeto
-            let floorGeometry = new THREE.PlaneGeometry( 10,10 );
+            let floorGeometry = new THREE.PlaneGeometry( 10000,10000 );
             let floorMaterial = new THREE.ShadowMaterial();
             floorMaterial.opacity = 0.3;
             let floorMeshA = new THREE.Mesh( floorGeometry, floorMaterial );
             floorMeshA.rotation.x = -Math.PI/2;
+            floorMeshA.position.y = -1;
             floorMeshA.receiveShadow = true;
+            sceneGroupKanji.add(floorMeshA);
 
-            let floorMeshB = new THREE.Mesh( floorGeometry, floorMaterial );
+            let floorGeometryB = new THREE.PlaneGeometry( 10000,10000 );
+            let floorMaterialB = new THREE.ShadowMaterial();
+            floorMaterialB.opacity = 0.3;
+            let floorMeshB = new THREE.Mesh( floorGeometryB, floorMaterialB );
             floorMeshB.rotation.x = -Math.PI/2;
+            floorMeshB.position.y = -1;
             floorMeshB.receiveShadow = true;
-
-            let floorMeshC = new THREE.Mesh( floorGeometry, floorMaterial );
-            floorMeshC.rotation.x = -Math.PI/2;
-            floorMeshC.receiveShadow = true;
-
-            let floorMeshD = new THREE.Mesh( floorGeometry, floorMaterial );
-            floorMeshD.rotation.x = -Math.PI/2;
-            floorMeshD.receiveShadow = true;
-
-            let floorMeshF = new THREE.Mesh( floorGeometry, floorMaterial );
-            floorMeshF.rotation.x = -Math.PI/2;
-            floorMeshF.receiveShadow = true;
-
-            let floorMeshG = new THREE.Mesh( floorGeometry, floorMaterial );
-            floorMeshG.rotation.x = -Math.PI/2;
-            floorMeshG.receiveShadow = true;
-
+            sceneGroupHiro.add(floorMeshB);
             
             let light = new THREE.PointLight(0xffffff);
             light.position.set(0, 2, 0);
             light.castShadow = true;
             sceneGroupKanji.add( light );
-            sceneGroupHiro.add( light );
             var geometry = new THREE.SphereGeometry( .1 );
             var material = new THREE.MeshBasicMaterial( { color: "white", transparent: true } );
             Sphere = new THREE.Mesh( geometry, material );
             Sphere.position.copy( light.position );
             sceneGroupKanji.add( Sphere );
-            sceneGroupHiro.add( Sphere );
+
+
+            let light2  = new THREE.PointLight(0xffffff);
+            light2.position.set(0, 2, 0);
+            light2.castShadow = true;
+            sceneGroupHiro.add( light2 );
+            var geometry2 = new THREE.SphereGeometry( .1 );
+            var material2 = new THREE.MeshBasicMaterial( { color: "white", transparent: true } );
+            Sphere2 = new THREE.Mesh( geometry2, material2 );
+            Sphere2.position.copy( light2.position );
+            sceneGroupHiro.add( Sphere2 );
 
             //Objetos para cada marcador
             var geometry = new THREE.BoxGeometry( 1, 1, 1 );
@@ -219,7 +218,7 @@
             //cube.rotation.set(10,30,0);
             cube1.castShadow = true;
             sceneGroupA.add( cube1 );
-            sceneGroupA.add( floorMeshA );
+            //sceneGroupA.add( floorMeshA );
 
             var geometry = new THREE.BoxGeometry( 1, 1, 1 );
             var material = new THREE.MeshLambertMaterial( { color: "red" } );
@@ -227,7 +226,7 @@
             //cube.rotation.set(10,30,0);
             cube2.castShadow = true;
             sceneGroupB.add( cube2 );
-            sceneGroupB.add( floorMeshB );
+            //sceneGroupB.add( floorMeshB );
 
             var geometry = new THREE.BoxGeometry( 1, 1, 1 );
             var material = new THREE.MeshLambertMaterial( { color: "yellow" } );
@@ -235,7 +234,7 @@
             //cube.rotation.set(10,30,0);
             cube3.castShadow = true;
             sceneGroupC.add( cube3 );
-            sceneGroupC.add( floorMeshC );
+            //sceneGroupC.add( floorMeshC );
 
             var geometry = new THREE.BoxGeometry( 1, 1, 1 );
             var material = new THREE.MeshLambertMaterial( { color: "orange" } );
@@ -243,7 +242,7 @@
             //cube.rotation.set(10,30,0);
             cube4.castShadow = true;
             sceneGroupD.add( cube4 );
-            sceneGroupD.add( floorMeshD );
+            //sceneGroupD.add( floorMeshD );
             
             var geometry = new THREE.BoxGeometry( 1, 1, 1 );
             var material = new THREE.MeshLambertMaterial( { color: "darkgreen" } );
@@ -251,7 +250,7 @@
             //cube.rotation.set(10,30,0);
             cube5.castShadow = true;
             sceneGroupF.add( cube5 );
-            sceneGroupF.add( floorMeshF );
+            //sceneGroupF.add( floorMeshF );
 
             var geometry = new THREE.BoxGeometry( 1, 1, 1 );
             var material = new THREE.MeshLambertMaterial( { color: "purple" } );
@@ -259,14 +258,8 @@
             //cube.rotation.set(10,30,0);
             cube6.castShadow = true;
             sceneGroupG.add( cube6 );
-            sceneGroupG.add( floorMeshG );        
+            //sceneGroupG.add( floorMeshG );        
 
-            markerA.add(sceneGroupA);
-            markerB.add(sceneGroupB);
-            markerC.add(sceneGroupC);
-            markerD.add(sceneGroupD);
-            markerF.add(sceneGroupF);
-            markerG.add(sceneGroupG);
             
 
             //cenas com o hiro junto
@@ -276,7 +269,7 @@
             //Sphere.rotation.set(10,30,0);
             Sphere1.castShadow = true;
             sceneGroupHiroA.add( Sphere1 );
-            sceneGroupHiroA.add( floorMeshA );
+           // sceneGroupHiroA.add( floorMeshHiroA );
 
             var geometry = new THREE.SphereGeometry( 1 );
             var material = new THREE.MeshLambertMaterial( { color: "red" } );
@@ -284,7 +277,7 @@
             //Sphere.rotation.set(10,30,0);
             Sphere2.castShadow = true;
             sceneGroupHiroB.add( Sphere2 );
-            sceneGroupHiroB.add( floorMeshB );
+            //sceneGroupHiroB.add( floorMeshHiroB );
 
             var geometry = new THREE.SphereGeometry( 1 );
             var material = new THREE.MeshLambertMaterial( { color: "yellow" } );
@@ -292,7 +285,7 @@
             //Sphere.rotation.set(10,30,0);
             Sphere3.castShadow = true;
             sceneGroupHiroC.add( Sphere3 );
-            sceneGroupHiroC.add( floorMeshC );
+            //sceneGroupHiroC.add( floorMeshHiroC );
 
             var geometry = new THREE.SphereGeometry( 1 );
             var material = new THREE.MeshLambertMaterial( { color: "orange" } );
@@ -300,7 +293,7 @@
             //Sphere.rotation.set(10,30,0);
             Sphere4.castShadow = true;
             sceneGroupHiroD.add( Sphere4 );
-            sceneGroupHiroD.add( floorMeshD );
+            //sceneGroupHiroD.add( floorMeshHiroD );
             
             var geometry = new THREE.SphereGeometry( 1 );
             var material = new THREE.MeshLambertMaterial( { color: "darkgreen" } );
@@ -308,7 +301,7 @@
             //Sphere.rotation.set(10,30,0);
             Sphere5.castShadow = true;
             sceneGroupHiroF.add( Sphere5 );
-            sceneGroupHiroF.add( floorMeshF );
+            //sceneGroupHiroF.add( floorMeshHiroF );
 
             var geometry = new THREE.SphereGeometry( 1 );
             var material = new THREE.MeshLambertMaterial( { color: "purple" } );
@@ -316,7 +309,15 @@
             //Sphere.rotation.set(10,30,0);
             Sphere6.castShadow = true;
             sceneGroupHiroG.add( Sphere6 );
-            sceneGroupHiroG.add( floorMeshG );
+            //sceneGroupHiroG.add( floorMeshHiroG );
+
+
+            markerA.add(sceneGroupA);
+            markerB.add(sceneGroupB);
+            markerC.add(sceneGroupC);
+            markerD.add(sceneGroupD);
+            markerF.add(sceneGroupF);
+            markerG.add(sceneGroupG);
         }
         function animate()
         {

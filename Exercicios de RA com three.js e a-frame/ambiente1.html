@@ -3,6 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Exercício 1</title>
+    <style>
+        body {
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .ui {
+            position: absolute;
+        }
+
+        button{
+            margin: 20px;
+        }
+        canvas { width: 100%; height: 100% }
+    </style>
     <!-- include three.js library -->
     <script src='js/three.min.js'></script>
     <script src='js/OBJLoader.js'></script>
@@ -116,14 +131,11 @@
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-            //Parece que fica mais organizado separar td que vai associado a um marcador por grupo
-            // para aquele marcador e colocar como filho do marcador
             let sceneGroupHiro = new THREE.Group();
             let sceneGroupKanji = new THREE.Group();
             markerRoot1.add(sceneGroupHiro);
             markerRoot2.add(sceneGroupKanji);
 
-            //O plano que recebe a sombra
             let floorGeometry = new THREE.PlaneGeometry( 20,20 );
             let floorMaterial = new THREE.ShadowMaterial();
             floorMaterial.opacity = 0.3;
@@ -132,18 +144,17 @@
             floorMesh.receiveShadow = true;
             sceneGroupHiro.add( floorMesh );
 
-            //Parte de carregamento do modelinho
             function onProgress(xhr) { console.log( (xhr.loaded / xhr.total * 100) + '% loaded' ); }
             function onError(xhr) { console.log( 'An error happened' ); }
 
             new THREE.MTLLoader()
-                .setPath( 'models/' )
-                .load( 'female02.mtl', function ( materials ) {
+                .setPath( 'aranha/' )
+                .load( 'Only_Spider_with_Animations_Export.mtl', function ( materials ) {
                     materials.preload();
                     new THREE.OBJLoader()
                         .setMaterials( materials )
-                        .setPath( 'models/' )
-                        .load( 'female02.obj', function ( object ) {
+                        .setPath( 'aranha/' )
+                        .load( 'Only_Spider_with_Animations_Export.obj', function ( object ) {
                             object.position.set(0, 0, 0);
                             object.scale.set(0.01, 0.01, 0.01);
                             object.traverse(function(child){
@@ -153,24 +164,15 @@
                         }, onProgress, onError );
                 } );
 
-            //Inserção da luz
-            let light = new THREE.SpotLight(0xffffff);
-            light.position.set(10, 10, 15);
+            let light = new THREE.PointLight(0xffffff);
+            light.position.set(0, 2, 0);
             light.castShadow = true;
             sceneGroupKanji.add( light );
-
-            //Só uma bolinha pra representar a luz msm
-            let lightSphere = new THREE.Mesh(
-                new THREE.SphereGeometry(0.1),
-                new THREE.MeshBasicMaterial({
-                    color: 0xffffff,
-                    transparent: true,
-                    opacity: 0.8
-                })
-            );
-            lightSphere.position.copy( light.position );
-            sceneGroupKanji.add( lightSphere );
-
+            var geometry = new THREE.SphereGeometry( .1 );
+            var material = new THREE.MeshBasicMaterial( { color: "white", transparent: true } );
+            Sphere = new THREE.Mesh( geometry, material );
+            Sphere.position.copy( light.position );
+            sceneGroupKanji.add( Sphere );
         }
 
         function animate()

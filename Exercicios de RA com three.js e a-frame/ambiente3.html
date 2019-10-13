@@ -1,19 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-    	<title>Exercício 3</title>
-		<script src="js/aframe.min.js"></script>
-		<script src='js/aframe-ar.js'></script>
-		<script>ARjs.Context.baseURL = '../../three.js/'</script>
-	</head>
-	<body style='margin : 0px; overflow: hidden;'>
+<script src="js/aframe.min.js"></script>
+<!-- include aframe-ar.js -->
+<script src="js/aframe-ar.js"></script>
 
-		<a-scene embedded arjs='trackingMethod: best; sourceType: webcam; debugUIEnabled: false;'>
-
-			<a-anchor hit-testing-enabled='false'>
-
-				<a-entity id="pai">
+<body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
+	<!-- <a-scene embedded arjs='sourceType: image; sourceUrl:../../data/images/armchair.jpg;'> -->
+	<a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
+			<a-entity id="pai">
 					<a-sphere id="Sol" radius=".5" material="shader: flat; src: imagens/Sol.jpg ">
 						<a-entity id="luz" light="type: spot;
 							castShadow: true;
@@ -30,10 +23,7 @@
 						<a-sphere id="planeta3" radius=".3"  material="src: imagens/earthmap1k.jpg" animation="property: rotation; to: 0 360 0; loop: true; easing: linear; dur: 15000" position="0 0 2.5" shadow></a-sphere>
 					</a-entity>
 				</a-entity>
-
-			</a-anchor>
-			<a-camera-static/>
-
-		</a-scene>
-	</body>
+		<a-marker-camera preset='hiro'></a-marker-camera>
+	</a-scene>
+</body>
 </html>

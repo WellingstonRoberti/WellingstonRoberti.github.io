@@ -38,6 +38,8 @@
         let sceneGroupHiroD = new THREE.Group();
         let sceneGroupHiroF = new THREE.Group();
         let sceneGroupHiroG = new THREE.Group();
+        let sceneGroupHiro = new THREE.Group();
+        let sceneGroupKanji = new THREE.Group();
 
         initialize();
         animate();
@@ -163,153 +165,82 @@
             // setup scene
             ////////////////////////////////////////////////////////////
 
-            renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-            let sceneGroupHiro = new THREE.Group();
-            let sceneGroupKanji = new THREE.Group();
             markerHiro.add(sceneGroupHiro);
             markerKanji.add(sceneGroupKanji);
 
-            //chão para sombra para cada objeto
-            let floorGeometry = new THREE.PlaneGeometry( 10000,10000 );
-            let floorMaterial = new THREE.ShadowMaterial();
-            floorMaterial.opacity = 0.3;
-            let floorMeshA = new THREE.Mesh( floorGeometry, floorMaterial );
-            floorMeshA.rotation.x = -Math.PI/2;
-            floorMeshA.position.y = -1;
-            floorMeshA.receiveShadow = true;
-            sceneGroupKanji.add(floorMeshA);
-
-            let floorGeometryB = new THREE.PlaneGeometry( 10000,10000 );
-            let floorMaterialB = new THREE.ShadowMaterial();
-            floorMaterialB.opacity = 0.3;
-            let floorMeshB = new THREE.Mesh( floorGeometryB, floorMaterialB );
-            floorMeshB.rotation.x = -Math.PI/2;
-            floorMeshB.position.y = -1;
-            floorMeshB.receiveShadow = true;
-            sceneGroupHiro.add(floorMeshB);
-            
-            let light = new THREE.PointLight(0xffffff);
-            light.position.set(0, 2, 0);
-            light.castShadow = true;
-            sceneGroupKanji.add( light );
-            var geometry = new THREE.SphereGeometry( .1 );
-            var material = new THREE.MeshBasicMaterial( { color: "white", transparent: true } );
-            Sphere = new THREE.Mesh( geometry, material );
-            Sphere.position.copy( light.position );
-            sceneGroupKanji.add( Sphere );
-
-
-            let light2  = new THREE.PointLight(0xffffff);
-            light2.position.set(0, 2, 0);
-            light2.castShadow = true;
-            sceneGroupHiro.add( light2 );
-            var geometry2 = new THREE.SphereGeometry( .1 );
-            var material2 = new THREE.MeshBasicMaterial( { color: "white", transparent: true } );
-            Sphere2 = new THREE.Mesh( geometry2, material2 );
-            Sphere2.position.copy( light2.position );
-            sceneGroupHiro.add( Sphere2 );
-
             //Objetos para cada marcador
             var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-            var material = new THREE.MeshLambertMaterial( { color: "blue" } );
+            var material = new THREE.MeshBasicMaterial( { color: "blue" , transparent:true, opacity:0.5} );
             cube1 = new THREE.Mesh( geometry, material );
             //cube.rotation.set(10,30,0);
-            cube1.castShadow = true;
             sceneGroupA.add( cube1 );
-            //sceneGroupA.add( floorMeshA );
 
-            var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-            var material = new THREE.MeshLambertMaterial( { color: "red" } );
+            var material = new THREE.MeshBasicMaterial( { color: "red" , transparent:true, opacity:0.5} );
             cube2 = new THREE.Mesh( geometry, material );
             //cube.rotation.set(10,30,0);
-            cube2.castShadow = true;
             sceneGroupB.add( cube2 );
-            //sceneGroupB.add( floorMeshB );
 
-            var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-            var material = new THREE.MeshLambertMaterial( { color: "yellow" } );
+            var material = new THREE.MeshBasicMaterial( { color: "yellow" , transparent:true, opacity:0.5} );
             cube3 = new THREE.Mesh( geometry, material );
             //cube.rotation.set(10,30,0);
-            cube3.castShadow = true;
             sceneGroupC.add( cube3 );
-            //sceneGroupC.add( floorMeshC );
 
-            var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-            var material = new THREE.MeshLambertMaterial( { color: "orange" } );
+
+            var material = new THREE.MeshBasicMaterial( { color: "orange" , transparent:true, opacity:0.5} );
             cube4 = new THREE.Mesh( geometry, material );
             //cube.rotation.set(10,30,0);
-            cube4.castShadow = true;
             sceneGroupD.add( cube4 );
-            //sceneGroupD.add( floorMeshD );
             
-            var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-            var material = new THREE.MeshLambertMaterial( { color: "darkgreen" } );
+
+            var material = new THREE.MeshBasicMaterial( { color: "darkgreen" , transparent:true, opacity:0.5} );
             cube5 = new THREE.Mesh( geometry, material );
             //cube.rotation.set(10,30,0);
-            cube5.castShadow = true;
             sceneGroupF.add( cube5 );
-            //sceneGroupF.add( floorMeshF );
 
-            var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-            var material = new THREE.MeshLambertMaterial( { color: "purple" } );
+            var material = new THREE.MeshBasicMaterial( { color: "purple" , transparent:true, opacity:0.5} );
             cube6 = new THREE.Mesh( geometry, material );
             //cube.rotation.set(10,30,0);
-            cube6.castShadow = true;
             sceneGroupG.add( cube6 );
-            //sceneGroupG.add( floorMeshG );        
 
             
 
             //cenas com o hiro junto
             var geometry = new THREE.SphereGeometry( 1 );
-            var material = new THREE.MeshLambertMaterial( { color: "blue" } );
+            var material = new THREE.MeshBasicMaterial( { color: "blue" , transparent:true, opacity:0.5} );
             Sphere1 = new THREE.Mesh( geometry, material );
             //Sphere.rotation.set(10,30,0);
-            Sphere1.castShadow = true;
             sceneGroupHiroA.add( Sphere1 );
-           // sceneGroupHiroA.add( floorMeshHiroA );
 
             var geometry = new THREE.SphereGeometry( 1 );
-            var material = new THREE.MeshLambertMaterial( { color: "red" } );
+            var material = new THREE.MeshBasicMaterial( { color: "red" , transparent:true, opacity:0.5} );
             Sphere2 = new THREE.Mesh( geometry, material );
             //Sphere.rotation.set(10,30,0);
-            Sphere2.castShadow = true;
             sceneGroupHiroB.add( Sphere2 );
-            //sceneGroupHiroB.add( floorMeshHiroB );
 
             var geometry = new THREE.SphereGeometry( 1 );
-            var material = new THREE.MeshLambertMaterial( { color: "yellow" } );
+            var material = new THREE.MeshBasicMaterial( { color: "yellow" , transparent:true, opacity:0.5} );
             Sphere3 = new THREE.Mesh( geometry, material );
             //Sphere.rotation.set(10,30,0);
-            Sphere3.castShadow = true;
             sceneGroupHiroC.add( Sphere3 );
-            //sceneGroupHiroC.add( floorMeshHiroC );
 
             var geometry = new THREE.SphereGeometry( 1 );
-            var material = new THREE.MeshLambertMaterial( { color: "orange" } );
+            var material = new THREE.MeshBasicMaterial( { color: "orange" , transparent:true, opacity:0.5} );
             Sphere4 = new THREE.Mesh( geometry, material );
             //Sphere.rotation.set(10,30,0);
-            Sphere4.castShadow = true;
             sceneGroupHiroD.add( Sphere4 );
-            //sceneGroupHiroD.add( floorMeshHiroD );
             
             var geometry = new THREE.SphereGeometry( 1 );
-            var material = new THREE.MeshLambertMaterial( { color: "darkgreen" } );
+            var material = new THREE.MeshBasicMaterial( { color: "darkgreen", transparent:true, opacity:0.5});
             Sphere5 = new THREE.Mesh( geometry, material );
             //Sphere.rotation.set(10,30,0);
-            Sphere5.castShadow = true;
             sceneGroupHiroF.add( Sphere5 );
-            //sceneGroupHiroF.add( floorMeshHiroF );
 
             var geometry = new THREE.SphereGeometry( 1 );
-            var material = new THREE.MeshLambertMaterial( { color: "purple" } );
+            var material = new THREE.MeshBasicMaterial( { color: "purple" , transparent:true, opacity:0.5} );
             Sphere6 = new THREE.Mesh( geometry, material );
             //Sphere.rotation.set(10,30,0);
-            Sphere6.castShadow = true;
             sceneGroupHiroG.add( Sphere6 );
-            //sceneGroupHiroG.add( floorMeshHiroG );
 
 
             markerA.add(sceneGroupA);
@@ -318,6 +249,7 @@
             markerD.add(sceneGroupD);
             markerF.add(sceneGroupF);
             markerG.add(sceneGroupG);
+
         }
         function animate()
         {
@@ -337,15 +269,59 @@
                 markerD.remove(sceneGroupD);
                 markerF.remove(sceneGroupF);
                 markerG.remove(sceneGroupG);
-                //console.log("teste");
+                console.log("teste");
                 markerA.add(sceneGroupHiroA);
                 markerB.add(sceneGroupHiroB);
                 markerC.add(sceneGroupHiroC);
                 markerD.add(sceneGroupHiroD);
                 markerF.add(sceneGroupHiroF);
                 markerG.add(sceneGroupHiroG);
+            }else if(markerControlsKanji.object3d.visible){
+                console.log("teste1");
+                markerA.remove(sceneGroupA);
+                markerB.remove(sceneGroupB);
+                markerC.remove(sceneGroupC);
+                markerD.remove(sceneGroupD);
+                markerF.remove(sceneGroupF);
+                markerG.remove(sceneGroupG);
+                markerA.remove(sceneGroupHiroA);
+                markerB.remove(sceneGroupHiroB);
+                markerC.remove(sceneGroupHiroC);
+                markerD.remove(sceneGroupHiroD);
+                markerF.remove(sceneGroupHiroF);
+                markerG.remove(sceneGroupHiroG);
+                var geometryT = new THREE.TorusGeometry( 3, 1.5, 16, 100 );
+                var materialT = new THREE.MeshBasicMaterial( { color: "purple" , transparent:true, opacity:0.5} );
+                torus = new THREE.Mesh( geometryT, materialT );
+                torus.position.z = 2;
+                if(markerControlsA.object3d.visible){
+                    //console.log("teste3");
+                    sceneGroupKanji.add( torus );
+                    markerKanji.add( sceneGroupKanji );
+                }else if(markerControlsB.object3d.visible){
+                    //console.log("teste4");
+                    sceneGroupKanji.add( torus );
+                    markerKanji.add( sceneGroupKanji );
+                }else if(markerControlsC.object3d.visible){
+                   // console.log("teste5");
+                    sceneGroupKanji.add( torus );
+                    markerKanji.add( sceneGroupKanji );
+                }else if(markerControlsD.object3d.visible){
+                    //console.log("teste6");
+                    sceneGroupKanji.add( torus );
+                    markerKanji.add( sceneGroupKanji );
+                }else if(markerControlsF.object3d.visible){
+                    //console.log("teste7");
+                    sceneGroupKanji.add( torus );
+                    markerKanji.add( sceneGroupKanji );
+                }else if(markerControlsG.object3d.visible){
+                    //console.log("teste8");
+                    sceneGroupKanji.add( torus );
+                    markerKanji.add( sceneGroupKanji );
+                }else{
+                    markerKanji.remove( sceneGroupKanji );
+                }
             }else{
-                //console.log("teste1");
                 markerA.remove(sceneGroupHiroA);
                 markerB.remove(sceneGroupHiroB);
                 markerC.remove(sceneGroupHiroC);

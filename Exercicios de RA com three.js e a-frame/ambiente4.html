@@ -5,7 +5,7 @@
     <title>Exercício 2</title>
     <!-- include three.js library -->
     <script src='js/three.min.js'></script>
-    <script src='js/GLTFLoader.js'></script>
+    <script src='js/GLTF2Loader.js'></script>
     <!-- include jsartookit -->
     <script src="jsartoolkit5/artoolkit.min.js"></script>
     <script src="jsartoolkit5/artoolkit.api.js"></script>
@@ -30,10 +30,11 @@
         let sceneGroupC = new THREE.Group();
         let sceneGroupD = new THREE.Group();
         let sceneGroupF = new THREE.Group();
+        let sceneGroupG = new THREE.Group();
         let sceneGroupHiro = new THREE.Group();
         let sceneGroupKanji = new THREE.Group();
-
-
+        const objs = [];
+        let gltf;
         initialize();
         animate();
         
@@ -175,21 +176,27 @@
             // setup scene
             ////////////////////////////////////////////////////////////
 
-            
+            let light = new THREE.PointLight( 0xffffff, 1, 100 );
+            light.position.set( 0,4,0 ); // default; light shining from top
+            light.castShadow = true;
+            camera.add( light );
             markerHiro.add(sceneGroupHiro);
             markerKanji.add(sceneGroupKanji);
 
-            const loader = new THREE.GLTFLoader();
+            const loader = new THREE.GLTF2Loader();
             loader.load(
-                'GLTF/yoda.gltf',
+                'GLTF/phoenix.gltf',
                 ( gltf ) => {
                     // called when the resource is loaded
-                    scene.add( gltf.scene );
-                    gltf.animations; // Array<THREE.AnimationClip>
-                    gltf.scene; // THREE.Scene
-                    gltf.scenes; // Array<THREE.Scene>
-                    gltf.cameras; // Array<THREE.Camera>
-                    gltf.asset; // Object
+                    
+
+                    const mixer = new THREE.AnimationMixer(gltf.scene);
+                    // animations is a list of THREE.AnimationClip
+                    for (const anim of gltf.animations) {
+                        mixer.clipAction(anim).play();
+                    }
+                    sceneGroupA.add( gltf.scene );
+                    objs.push({gltf, mixer});
                 },
                 ( xhr ) => {
                     // called while loading is progressing
@@ -200,23 +207,540 @@
                     console.error( 'An error happened', error );
                 },
             );
-            markerA.add(sceneGroupA);
+
+            loader.load(
+                'GLTF/yoda.gltf',
+                ( gltf ) => {
+                    // called when the resource is loaded
+                    
+
+                    const mixer = new THREE.AnimationMixer(gltf.scene);
+                    // animations is a list of THREE.AnimationClip
+                    for (const anim of gltf.animations) {
+                        mixer.clipAction(anim).play();
+                    }
+                    sceneGroupB.add( gltf.scene );
+                    objs.push({gltf, mixer});
+                },
+                ( xhr ) => {
+                    // called while loading is progressing
+                    console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
+                },
+                ( error ) => {
+                    // called when loading has errors
+                    console.error( 'An error happened', error );
+                },
+            );
+
+            loader.load(
+                'GLTF/cogumelos.gltf',
+                ( gltf ) => {
+                    // called when the resource is loaded
+                    
+
+                    const mixer = new THREE.AnimationMixer(gltf.scene);
+                    // animations is a list of THREE.AnimationClip
+                    for (const anim of gltf.animations) {
+                        mixer.clipAction(anim).play();
+                    }
+                    sceneGroupC.add( gltf.scene );
+                    objs.push({gltf, mixer});
+                },
+                ( xhr ) => {
+                    // called while loading is progressing
+                    console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
+                },
+                ( error ) => {
+                    // called when loading has errors
+                    console.error( 'An error happened', error );
+                },
+            );
+
+            loader.load(
+                'GLTF/r2d2.gltf',
+                ( gltf ) => {
+                    // called when the resource is loaded
+                    
+
+                    const mixer = new THREE.AnimationMixer(gltf.scene);
+                    // animations is a list of THREE.AnimationClip
+                    for (const anim of gltf.animations) {
+                        mixer.clipAction(anim).play();
+                    }
+                    sceneGroupD.add( gltf.scene );
+                    objs.push({gltf, mixer});
+                },
+                ( xhr ) => {
+                    // called while loading is progressing
+                    console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
+                },
+                ( error ) => {
+                    // called when loading has errors
+                    console.error( 'An error happened', error );
+                },
+            );
+
+            loader.load(
+                'GLTF/caveira.gltf',
+                ( gltf ) => {
+                    // called when the resource is loaded
+                    
+
+                    const mixer = new THREE.AnimationMixer(gltf.scene);
+                    // animations is a list of THREE.AnimationClip
+                    for (const anim of gltf.animations) {
+                        mixer.clipAction(anim).play();
+                    }
+                    sceneGroupF.add( gltf.scene );
+                    objs.push({gltf, mixer});
+                },
+                ( xhr ) => {
+                    // called while loading is progressing
+                    console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
+                },
+                ( error ) => {
+                    // called when loading has errors
+                    console.error( 'An error happened', error );
+                },
+            );
         }
+
+        
+
         function animate()
         {
+            objs.forEach(({mixer}) => {mixer.update(clock.getDelta());});
             requestAnimationFrame(animate);
             deltaTime = clock.getDelta();
             totalTime += deltaTime;
             update();
             render();
         }
-        var geometryT = new THREE.TorusGeometry( 3, 1.5, 16, 100 );
-        var materialT = new THREE.MeshBasicMaterial( { color: "purple" , transparent:true, opacity:0.5} );
-        torus = new THREE.Mesh( geometryT, materialT );
-        torus.position = markerKanji.getWorldPosition();
         function update()
         {
-            
+            if(markerControlsKanji.object3d.visible){
+                
+                console.log("testeKanji");
+                markerA.add(sceneGroupB);
+                markerA.add(sceneGroupC);
+                markerA.add(sceneGroupD);
+                markerA.add(sceneGroupF);
+                markerB.add(sceneGroupB);
+                markerB.add(sceneGroupC);
+                markerB.add(sceneGroupD);
+                markerB.add(sceneGroupF);
+                markerC.add(sceneGroupB);
+                markerC.add(sceneGroupC);
+                markerC.add(sceneGroupD);
+                markerC.add(sceneGroupF);
+                markerD.add(sceneGroupB);
+                markerD.add(sceneGroupC);
+                markerD.add(sceneGroupD);
+                markerD.add(sceneGroupF);
+                markerF.add(sceneGroupB);
+                markerF.add(sceneGroupC);
+                markerF.add(sceneGroupD);
+                markerF.add(sceneGroupF);
+                markerG.add(sceneGroupB);
+                markerG.add(sceneGroupC);
+                markerG.add(sceneGroupD);
+                markerG.add(sceneGroupF);
+
+                if(markerControlsA.object3d.visible){
+                    //console.log("teste3");
+                    markerA.add( sceneGroupA );
+                }else if(markerControlsB.object3d.visible){
+                    //console.log("teste4");
+                    markerB.add( sceneGroupA );
+                }else if(markerControlsC.object3d.visible){
+                   // console.log("teste5");
+                    markerC.add( sceneGroupA );
+                }else if(markerControlsD.object3d.visible){
+                    //console.log("teste6");
+                    markerD.add( sceneGroupA );
+                }else if(markerControlsF.object3d.visible){
+                    //console.log("teste7");
+                    markerF.add( sceneGroupA );
+                }else if(markerControlsG.object3d.visible){
+                    //console.log("teste8");
+                    markerG.add( sceneGroupA );
+                }else{
+                    markerA.add(sceneGroupA);
+                    markerA.add(sceneGroupB);
+                    markerA.add(sceneGroupC);
+                    markerA.add(sceneGroupD);
+                    markerA.add(sceneGroupF);
+                    markerB.add(sceneGroupA);
+                    markerB.add(sceneGroupB);
+                    markerB.add(sceneGroupC);
+                    markerB.add(sceneGroupD);
+                    markerB.add(sceneGroupF);
+                    markerC.add(sceneGroupA);
+                    markerC.add(sceneGroupB);
+                    markerC.add(sceneGroupC);
+                    markerC.add(sceneGroupD);
+                    markerC.add(sceneGroupF);
+                    markerD.add(sceneGroupA);
+                    markerD.add(sceneGroupB);
+                    markerD.add(sceneGroupC);
+                    markerD.add(sceneGroupD);
+                    markerD.add(sceneGroupF);
+                    markerF.add(sceneGroupA);
+                    markerF.add(sceneGroupB);
+                    markerF.add(sceneGroupC);
+                    markerF.add(sceneGroupD);
+                    markerF.add(sceneGroupF);
+                    markerG.add(sceneGroupA);
+                    markerG.add(sceneGroupB);
+                    markerG.add(sceneGroupC);
+                    markerG.add(sceneGroupD);
+                    markerG.add(sceneGroupF);
+                }
+            }else if(markerControlsHiro.object3d.visible){
+                
+                console.log("testeHiro");
+                markerA.add(sceneGroupA);
+                markerA.add(sceneGroupC);
+                markerA.add(sceneGroupD);
+                markerA.add(sceneGroupF);
+                markerB.add(sceneGroupA);
+                markerB.add(sceneGroupC);
+                markerB.add(sceneGroupD);
+                markerB.add(sceneGroupF);
+                markerC.add(sceneGroupA);
+                markerC.add(sceneGroupC);
+                markerC.add(sceneGroupD);
+                markerC.add(sceneGroupF);
+                markerD.add(sceneGroupA);
+                markerD.add(sceneGroupC);
+                markerD.add(sceneGroupD);
+                markerD.add(sceneGroupF);
+                markerF.add(sceneGroupA);
+                markerF.add(sceneGroupC);
+                markerF.add(sceneGroupD);
+                markerF.add(sceneGroupF);
+                markerG.add(sceneGroupA);
+                markerG.add(sceneGroupC);
+                markerG.add(sceneGroupD);
+                markerG.add(sceneGroupF);
+
+                if(markerControlsA.object3d.visible){
+                    //console.log("teste3");
+                    markerA.add( sceneGroupB );
+                }else if(markerControlsB.object3d.visible){
+                    //console.log("teste4");
+                    markerB.add( sceneGroupB);
+                }else if(markerControlsC.object3d.visible){
+                   // console.log("teste5");
+                    markerC.add( sceneGroupB );
+                }else if(markerControlsD.object3d.visible){
+                    //console.log("teste6");
+                    markerD.add( sceneGroupB );
+                }else if(markerControlsF.object3d.visible){
+                    //console.log("teste7");
+                    markerF.add( sceneGroupB );
+                }else if(markerControlsG.object3d.visible){
+                    //console.log("teste8");
+                    markerG.add( sceneGroupB );
+                }else{
+                    markerA.add(sceneGroupA);
+                    markerA.add(sceneGroupB);
+                    markerA.add(sceneGroupC);
+                    markerA.add(sceneGroupD);
+                    markerA.add(sceneGroupF);
+                    markerB.add(sceneGroupA);
+                    markerB.add(sceneGroupB);
+                    markerB.add(sceneGroupC);
+                    markerB.add(sceneGroupD);
+                    markerB.add(sceneGroupF);
+                    markerC.add(sceneGroupA);
+                    markerC.add(sceneGroupB);
+                    markerC.add(sceneGroupC);
+                    markerC.add(sceneGroupD);
+                    markerC.add(sceneGroupF);
+                    markerD.add(sceneGroupA);
+                    markerD.add(sceneGroupB);
+                    markerD.add(sceneGroupC);
+                    markerD.add(sceneGroupD);
+                    markerD.add(sceneGroupF);
+                    markerF.add(sceneGroupA);
+                    markerF.add(sceneGroupB);
+                    markerF.add(sceneGroupC);
+                    markerF.add(sceneGroupD);
+                    markerF.add(sceneGroupF);
+                    markerG.add(sceneGroupA);
+                    markerG.add(sceneGroupB);
+                    markerG.add(sceneGroupC);
+                    markerG.add(sceneGroupD);
+                    markerG.add(sceneGroupF);
+                }
+            }else if(markerControls1.object3d.visible){
+                
+                console.log("teste1");
+                markerA.add(sceneGroupA);
+                markerA.add(sceneGroupB);
+                markerA.add(sceneGroupD);
+                markerA.add(sceneGroupF);
+                markerB.add(sceneGroupA);
+                markerB.add(sceneGroupB);
+                markerB.add(sceneGroupD);
+                markerB.add(sceneGroupF);
+                markerC.add(sceneGroupA);
+                markerC.add(sceneGroupB);
+                markerC.add(sceneGroupD);
+                markerC.add(sceneGroupF);
+                markerD.add(sceneGroupA);
+                markerD.add(sceneGroupB);
+                markerD.add(sceneGroupD);
+                markerD.add(sceneGroupF);
+                markerF.add(sceneGroupA);
+                markerF.add(sceneGroupB);
+                markerF.add(sceneGroupD);
+                markerF.add(sceneGroupF);
+                markerG.add(sceneGroupA);
+                markerG.add(sceneGroupB);
+                markerG.add(sceneGroupD);
+                markerG.add(sceneGroupF);
+
+                if(markerControlsA.object3d.visible){
+                    //console.log("teste3");
+                    markerA.add( sceneGroupC );
+                }else if(markerControlsB.object3d.visible){
+                    //console.log("teste4");
+                    markerB.add( sceneGroupC );
+                }else if(markerControlsC.object3d.visible){
+                   // console.log("teste5");
+                    markerC.add( sceneGroupC );
+                }else if(markerControlsD.object3d.visible){
+                    //console.log("teste6");
+                    markerD.add( sceneGroupC );
+                }else if(markerControlsF.object3d.visible){
+                    //console.log("teste7");
+                    markerF.add( sceneGroupC );
+                }else if(markerControlsG.object3d.visible){
+                    //console.log("teste8");
+                    markerG.add( sceneGroupC );
+                }else{
+                    markerA.add(sceneGroupA);
+                    markerA.add(sceneGroupB);
+                    markerA.add(sceneGroupC);
+                    markerA.add(sceneGroupD);
+                    markerA.add(sceneGroupF);
+                    markerB.add(sceneGroupA);
+                    markerB.add(sceneGroupB);
+                    markerB.add(sceneGroupC);
+                    markerB.add(sceneGroupD);
+                    markerB.add(sceneGroupF);
+                    markerC.add(sceneGroupA);
+                    markerC.add(sceneGroupB);
+                    markerC.add(sceneGroupC);
+                    markerC.add(sceneGroupD);
+                    markerC.add(sceneGroupF);
+                    markerD.add(sceneGroupA);
+                    markerD.add(sceneGroupB);
+                    markerD.add(sceneGroupC);
+                    markerD.add(sceneGroupD);
+                    markerD.add(sceneGroupF);
+                    markerF.add(sceneGroupA);
+                    markerF.add(sceneGroupB);
+                    markerF.add(sceneGroupC);
+                    markerF.add(sceneGroupD);
+                    markerF.add(sceneGroupF);
+                    markerG.add(sceneGroupA);
+                    markerG.add(sceneGroupB);
+                    markerG.add(sceneGroupC);
+                    markerG.add(sceneGroupD);
+                    markerG.add(sceneGroupF);
+                }
+            }else if(markerControls2.object3d.visible){
+                
+                console.log("teste2");
+                markerA.add(sceneGroupA);
+                markerA.add(sceneGroupB);
+                markerA.add(sceneGroupC);
+                markerA.add(sceneGroupF);
+                markerB.add(sceneGroupA);
+                markerB.add(sceneGroupB);
+                markerB.add(sceneGroupC);
+                markerB.add(sceneGroupF);
+                markerC.add(sceneGroupA);
+                markerC.add(sceneGroupB);
+                markerC.add(sceneGroupC);
+                markerC.add(sceneGroupF);
+                markerD.add(sceneGroupA);
+                markerD.add(sceneGroupB);
+                markerD.add(sceneGroupC);
+                markerD.add(sceneGroupF);
+                markerF.add(sceneGroupA);
+                markerF.add(sceneGroupB);
+                markerF.add(sceneGroupC);
+                markerF.add(sceneGroupF);
+                markerG.add(sceneGroupA);
+                markerG.add(sceneGroupB);
+                markerG.add(sceneGroupC);
+                markerG.add(sceneGroupF);
+
+                if(markerControlsA.object3d.visible){
+                    //console.log("teste3");
+                    markerA.add( sceneGroupD );
+                }else if(markerControlsB.object3d.visible){
+                    //console.log("teste4");
+                    markerB.add( sceneGroupD );
+                }else if(markerControlsC.object3d.visible){
+                   // console.log("teste5");
+                    markerC.add( sceneGroupD );
+                }else if(markerControlsD.object3d.visible){
+                    //console.log("teste6");
+                    markerD.add( sceneGroupD );
+                }else if(markerControlsF.object3d.visible){
+                    //console.log("teste7");
+                    markerF.add( sceneGroupD );
+                }else if(markerControlsG.object3d.visible){
+                    //console.log("teste8");
+                    markerG.add( sceneGroupD );
+                }else{
+                    markerA.add(sceneGroupA);
+                    markerA.add(sceneGroupB);
+                    markerA.add(sceneGroupC);
+                    markerA.add(sceneGroupD);
+                    markerA.add(sceneGroupF);
+                    markerB.add(sceneGroupA);
+                    markerB.add(sceneGroupB);
+                    markerB.add(sceneGroupC);
+                    markerB.add(sceneGroupD);
+                    markerB.add(sceneGroupF);
+                    markerC.add(sceneGroupA);
+                    markerC.add(sceneGroupB);
+                    markerC.add(sceneGroupC);
+                    markerC.add(sceneGroupD);
+                    markerC.add(sceneGroupF);
+                    markerD.add(sceneGroupA);
+                    markerD.add(sceneGroupB);
+                    markerD.add(sceneGroupC);
+                    markerD.add(sceneGroupD);
+                    markerD.add(sceneGroupF);
+                    markerF.add(sceneGroupA);
+                    markerF.add(sceneGroupB);
+                    markerF.add(sceneGroupC);
+                    markerF.add(sceneGroupD);
+                    markerF.add(sceneGroupF);
+                    markerG.add(sceneGroupA);
+                    markerG.add(sceneGroupB);
+                    markerG.add(sceneGroupC);
+                    markerG.add(sceneGroupD);
+                    markerG.add(sceneGroupF);
+                }
+            }else if(markerControls3.object3d.visible){
+                
+                console.log("teste3");
+                markerA.add(sceneGroupA);
+                markerA.add(sceneGroupB);
+                markerA.add(sceneGroupC);
+                markerA.add(sceneGroupD);
+                markerB.add(sceneGroupA);
+                markerB.add(sceneGroupB);
+                markerB.add(sceneGroupC);
+                markerB.add(sceneGroupD);
+                markerC.add(sceneGroupA);
+                markerC.add(sceneGroupB);
+                markerC.add(sceneGroupC);
+                markerC.add(sceneGroupD);
+                markerD.add(sceneGroupA);
+                markerD.add(sceneGroupB);
+                markerD.add(sceneGroupC);
+                markerD.add(sceneGroupD);
+                markerF.add(sceneGroupA);
+                markerF.add(sceneGroupB);
+                markerF.add(sceneGroupC);
+                markerF.add(sceneGroupD);
+                markerG.add(sceneGroupA);
+                markerG.add(sceneGroupB);
+                markerG.add(sceneGroupC);
+                markerG.add(sceneGroupD);
+
+                if(markerControlsA.object3d.visible){
+                    //console.log("teste3");
+                    markerA.add( sceneGroupF );
+                }else if(markerControlsB.object3d.visible){
+                    //console.log("teste4");
+                    markerB.add( sceneGroupF );
+                }else if(markerControlsC.object3d.visible){
+                   // console.log("teste5");
+                    markerC.add( sceneGroupF );
+                }else if(markerControlsD.object3d.visible){
+                    //console.log("teste6");
+                    markerD.add( sceneGroupF );
+                }else if(markerControlsF.object3d.visible){
+                    //console.log("teste7");
+                    markerF.add( sceneGroupF );
+                }else if(markerControlsG.object3d.visible){
+                    //console.log("teste8");
+                    markerG.add( sceneGroupF );
+                }else{
+                    markerA.add(sceneGroupA);
+                    markerA.add(sceneGroupB);
+                    markerA.add(sceneGroupC);
+                    markerA.add(sceneGroupD);
+                    markerA.add(sceneGroupF);
+                    markerB.add(sceneGroupA);
+                    markerB.add(sceneGroupB);
+                    markerB.add(sceneGroupC);
+                    markerB.add(sceneGroupD);
+                    markerB.add(sceneGroupF);
+                    markerC.add(sceneGroupA);
+                    markerC.add(sceneGroupB);
+                    markerC.add(sceneGroupC);
+                    markerC.add(sceneGroupD);
+                    markerC.add(sceneGroupF);
+                    markerD.add(sceneGroupA);
+                    markerD.add(sceneGroupB);
+                    markerD.add(sceneGroupC);
+                    markerD.add(sceneGroupD);
+                    markerD.add(sceneGroupF);
+                    markerF.add(sceneGroupA);
+                    markerF.add(sceneGroupB);
+                    markerF.add(sceneGroupC);
+                    markerF.add(sceneGroupD);
+                    markerF.add(sceneGroupF);
+                    markerG.add(sceneGroupA);
+                    markerG.add(sceneGroupB);
+                    markerG.add(sceneGroupC);
+                    markerG.add(sceneGroupD);
+                    markerG.add(sceneGroupF);
+                }
+            }else{
+                markerA.add(sceneGroupA);
+                markerA.add(sceneGroupB);
+                markerA.add(sceneGroupC);
+                markerA.add(sceneGroupD);
+                markerA.add(sceneGroupF);
+                markerB.add(sceneGroupA);
+                markerB.add(sceneGroupB);
+                markerB.add(sceneGroupC);
+                markerB.add(sceneGroupD);
+                markerB.add(sceneGroupF);
+                markerC.add(sceneGroupA);
+                markerC.add(sceneGroupB);
+                markerC.add(sceneGroupC);
+                markerC.add(sceneGroupD);
+                markerC.add(sceneGroupF);
+                markerD.add(sceneGroupA);
+                markerD.add(sceneGroupB);
+                markerD.add(sceneGroupC);
+                markerD.add(sceneGroupD);
+                markerD.add(sceneGroupF);
+                markerF.add(sceneGroupA);
+                markerF.add(sceneGroupB);
+                markerF.add(sceneGroupC);
+                markerF.add(sceneGroupD);
+                markerF.add(sceneGroupF);
+                markerG.add(sceneGroupA);
+                markerG.add(sceneGroupB);
+                markerG.add(sceneGroupC);
+                markerG.add(sceneGroupD);
+                markerG.add(sceneGroupF);
+            }
+
 
             
 

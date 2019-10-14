@@ -5,8 +5,7 @@
     <title>Exercício 2</title>
     <!-- include three.js library -->
     <script src='js/three.min.js'></script>
-    <script src='js/OBJLoader.js'></script>
-    <script src='js/MTLLoader.js'></script>
+    <script src='js/GLTFLoader.js'></script>
     <!-- include jsartookit -->
     <script src="jsartoolkit5/artoolkit.min.js"></script>
     <script src="jsartoolkit5/artoolkit.api.js"></script>
@@ -24,22 +23,16 @@
 
         var markerHiro, markerKanji, markerA, markerB, markerC, markerD, markerG, markerF;
         var markerControlsHiro, markerControlsKanji, markerControlsA, markerControlsB, markerControlsC, markerControlsD, markerControlsG, markerControlsF;
-
+        let torus;
         var meshModel, meshLight;
         let sceneGroupA = new THREE.Group();
         let sceneGroupB = new THREE.Group();
         let sceneGroupC = new THREE.Group();
         let sceneGroupD = new THREE.Group();
         let sceneGroupF = new THREE.Group();
-        let sceneGroupG = new THREE.Group();
-        let sceneGroupHiroA = new THREE.Group();
-        let sceneGroupHiroB = new THREE.Group();
-        let sceneGroupHiroC = new THREE.Group();
-        let sceneGroupHiroD = new THREE.Group();
-        let sceneGroupHiroF = new THREE.Group();
-        let sceneGroupHiroG = new THREE.Group();
         let sceneGroupHiro = new THREE.Group();
         let sceneGroupKanji = new THREE.Group();
+
 
         initialize();
         animate();
@@ -124,6 +117,23 @@
                 type: 'pattern', patternUrl: "data/kanji.patt",
             })
 
+            marker1 = new THREE.Group();
+            scene.add(marker1);
+            markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, marker1, {
+                type: 'pattern', patternUrl: "data/1.patt",
+            })
+
+            marker2 = new THREE.Group();
+            scene.add(marker2);
+            markerControls2 = new THREEx.ArMarkerControls(arToolkitContext, marker2, {
+                type: 'pattern', patternUrl: "data/2.patt",
+            })
+
+            marker3 = new THREE.Group();
+            scene.add(marker3);
+            markerControls3 = new THREEx.ArMarkerControls(arToolkitContext, marker3, {
+                type: 'pattern', patternUrl: "data/3.patt",
+            })
             markerA = new THREE.Group();
             scene.add(markerA);
             markerControlsA = new THREEx.ArMarkerControls(arToolkitContext, markerA, {
@@ -165,91 +175,32 @@
             // setup scene
             ////////////////////////////////////////////////////////////
 
-
+            
             markerHiro.add(sceneGroupHiro);
             markerKanji.add(sceneGroupKanji);
 
-            //Objetos para cada marcador
-            var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-            var material = new THREE.MeshBasicMaterial( { color: "blue" , transparent:true, opacity:0.5} );
-            cube1 = new THREE.Mesh( geometry, material );
-            //cube.rotation.set(10,30,0);
-            sceneGroupA.add( cube1 );
-
-            var material = new THREE.MeshBasicMaterial( { color: "red" , transparent:true, opacity:0.5} );
-            cube2 = new THREE.Mesh( geometry, material );
-            //cube.rotation.set(10,30,0);
-            sceneGroupB.add( cube2 );
-
-            var material = new THREE.MeshBasicMaterial( { color: "yellow" , transparent:true, opacity:0.5} );
-            cube3 = new THREE.Mesh( geometry, material );
-            //cube.rotation.set(10,30,0);
-            sceneGroupC.add( cube3 );
-
-
-            var material = new THREE.MeshBasicMaterial( { color: "orange" , transparent:true, opacity:0.5} );
-            cube4 = new THREE.Mesh( geometry, material );
-            //cube.rotation.set(10,30,0);
-            sceneGroupD.add( cube4 );
-            
-
-            var material = new THREE.MeshBasicMaterial( { color: "darkgreen" , transparent:true, opacity:0.5} );
-            cube5 = new THREE.Mesh( geometry, material );
-            //cube.rotation.set(10,30,0);
-            sceneGroupF.add( cube5 );
-
-            var material = new THREE.MeshBasicMaterial( { color: "purple" , transparent:true, opacity:0.5} );
-            cube6 = new THREE.Mesh( geometry, material );
-            //cube.rotation.set(10,30,0);
-            sceneGroupG.add( cube6 );
-
-            
-
-            //cenas com o hiro junto
-            var geometry = new THREE.SphereGeometry( 1 );
-            var material = new THREE.MeshBasicMaterial( { color: "blue" , transparent:true, opacity:0.5} );
-            Sphere1 = new THREE.Mesh( geometry, material );
-            //Sphere.rotation.set(10,30,0);
-            sceneGroupHiroA.add( Sphere1 );
-
-            var geometry = new THREE.SphereGeometry( 1 );
-            var material = new THREE.MeshBasicMaterial( { color: "red" , transparent:true, opacity:0.5} );
-            Sphere2 = new THREE.Mesh( geometry, material );
-            //Sphere.rotation.set(10,30,0);
-            sceneGroupHiroB.add( Sphere2 );
-
-            var geometry = new THREE.SphereGeometry( 1 );
-            var material = new THREE.MeshBasicMaterial( { color: "yellow" , transparent:true, opacity:0.5} );
-            Sphere3 = new THREE.Mesh( geometry, material );
-            //Sphere.rotation.set(10,30,0);
-            sceneGroupHiroC.add( Sphere3 );
-
-            var geometry = new THREE.SphereGeometry( 1 );
-            var material = new THREE.MeshBasicMaterial( { color: "orange" , transparent:true, opacity:0.5} );
-            Sphere4 = new THREE.Mesh( geometry, material );
-            //Sphere.rotation.set(10,30,0);
-            sceneGroupHiroD.add( Sphere4 );
-            
-            var geometry = new THREE.SphereGeometry( 1 );
-            var material = new THREE.MeshBasicMaterial( { color: "darkgreen", transparent:true, opacity:0.5});
-            Sphere5 = new THREE.Mesh( geometry, material );
-            //Sphere.rotation.set(10,30,0);
-            sceneGroupHiroF.add( Sphere5 );
-
-            var geometry = new THREE.SphereGeometry( 1 );
-            var material = new THREE.MeshBasicMaterial( { color: "purple" , transparent:true, opacity:0.5} );
-            Sphere6 = new THREE.Mesh( geometry, material );
-            //Sphere.rotation.set(10,30,0);
-            sceneGroupHiroG.add( Sphere6 );
-
-
+            const loader = new THREE.GLTFLoader();
+            loader.load(
+                'GLTF/yoda.gltf',
+                ( gltf ) => {
+                    // called when the resource is loaded
+                    scene.add( gltf.scene );
+                    gltf.animations; // Array<THREE.AnimationClip>
+                    gltf.scene; // THREE.Scene
+                    gltf.scenes; // Array<THREE.Scene>
+                    gltf.cameras; // Array<THREE.Camera>
+                    gltf.asset; // Object
+                },
+                ( xhr ) => {
+                    // called while loading is progressing
+                    console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
+                },
+                ( error ) => {
+                    // called when loading has errors
+                    console.error( 'An error happened', error );
+                },
+            );
             markerA.add(sceneGroupA);
-            markerB.add(sceneGroupB);
-            markerC.add(sceneGroupC);
-            markerD.add(sceneGroupD);
-            markerF.add(sceneGroupF);
-            markerG.add(sceneGroupG);
-
         }
         function animate()
         {
@@ -259,246 +210,16 @@
             update();
             render();
         }
-
+        var geometryT = new THREE.TorusGeometry( 3, 1.5, 16, 100 );
+        var materialT = new THREE.MeshBasicMaterial( { color: "purple" , transparent:true, opacity:0.5} );
+        torus = new THREE.Mesh( geometryT, materialT );
+        torus.position = markerKanji.getWorldPosition();
         function update()
         {
-            if(markerControlsHiro.object3d.visible){
-                markerA.remove(sceneGroupA);
-                markerB.remove(sceneGroupB);
-                markerC.remove(sceneGroupC);
-                markerD.remove(sceneGroupD);
-                markerF.remove(sceneGroupF);
-                markerG.remove(sceneGroupG);
-                console.log("teste");
-                markerA.add(sceneGroupHiroA);
-                markerB.add(sceneGroupHiroB);
-                markerC.add(sceneGroupHiroC);
-                markerD.add(sceneGroupHiroD);
-                markerF.add(sceneGroupHiroF);
-                markerG.add(sceneGroupHiroG);
-            }else if(markerControlsKanji.object3d.visible){
-                console.log("teste1");
-                markerA.remove(sceneGroupA);
-                markerB.remove(sceneGroupB);
-                markerC.remove(sceneGroupC);
-                markerD.remove(sceneGroupD);
-                markerF.remove(sceneGroupF);
-                markerG.remove(sceneGroupG);
-                markerA.remove(sceneGroupHiroA);
-                markerB.remove(sceneGroupHiroB);
-                markerC.remove(sceneGroupHiroC);
-                markerD.remove(sceneGroupHiroD);
-                markerF.remove(sceneGroupHiroF);
-                markerG.remove(sceneGroupHiroG);
-                if(markerControlsA.object3d.visible){
-                    //console.log("teste3");
-                    function onProgress(xhr) { console.log( (xhr.loaded / xhr.total * 100) + '% loaded' ); }
-                    function onError(xhr) { console.log( 'An error happened' ); }
+            
 
-                    new THREE.MTLLoader()
-                        .setPath( 'aranha/' )
-                        .load( 'Only_Spider_with_Animations_Export.mtl', function ( materials ) {
-                            materials.preload();
-                            new THREE.OBJLoader()
-                                .setMaterials( materials )
-                                .setPath( 'aranha/' )
-                                .load( 'Only_Spider_with_Animations_Export.obj', function ( object ) {
-                                    object.position.set(0, 0, 0);
-                                    object.scale.set(0.01, 0.01, 0.01);
-                                    object.traverse(function(child){
-                                        child.castShadow = true;
-                                    });
-                                    sceneGroupKanji.add(object);
-                                }, onProgress, onError );
-                        } );
+            
 
-                    let light = new THREE.PointLight(0xffffff);
-                    light.position.set(0, 10, 0);
-                    light.castShadow = true;
-                    sceneGroupKanji.add( light );
-                    var geometry = new THREE.SphereGeometry( .1 );
-                    var material = new THREE.MeshBasicMaterial( { color: "white", transparent: true } );
-                    Sphere = new THREE.Mesh( geometry, material );
-                    Sphere.position.copy( light.position );
-                    sceneGroupKanji.add( Sphere );
-                    markerKanji.add( sceneGroupKanji );
-                }else if(markerControlsB.object3d.visible){
-                    //console.log("teste4");
-                    function onProgress(xhr) { console.log( (xhr.loaded / xhr.total * 100) + '% loaded' ); }
-                    function onError(xhr) { console.log( 'An error happened' ); }
-
-                    new THREE.MTLLoader()
-                        .setPath( 'aranha/' )
-                        .load( 'Only_Spider_with_Animations_Export.mtl', function ( materials ) {
-                            materials.preload();
-                            new THREE.OBJLoader()
-                                .setMaterials( materials )
-                                .setPath( 'aranha/' )
-                                .load( 'Only_Spider_with_Animations_Export.obj', function ( object ) {
-                                    object.position.set(0, 0, 0);
-                                    object.scale.set(0.01, 0.01, 0.01);
-                                    object.traverse(function(child){
-                                        child.castShadow = true;
-                                    });
-                                    sceneGroupKanji.add(object);
-                                }, onProgress, onError );
-                        } );
-
-                    let light = new THREE.PointLight(0xffffff);
-                    light.position.set(0, 10, 0);
-                    light.castShadow = true;
-                    sceneGroupKanji.add( light );
-                    var geometry = new THREE.SphereGeometry( .1 );
-                    var material = new THREE.MeshBasicMaterial( { color: "white", transparent: true } );
-                    Sphere = new THREE.Mesh( geometry, material );
-                    Sphere.position.copy( light.position );
-                    sceneGroupKanji.add( Sphere );
-                    markerKanji.add( sceneGroupKanji );
-                }else if(markerControlsC.object3d.visible){
-                   // console.log("teste5");
-                    function onProgress(xhr) { console.log( (xhr.loaded / xhr.total * 100) + '% loaded' ); }
-                    function onError(xhr) { console.log( 'An error happened' ); }
-
-                    new THREE.MTLLoader()
-                        .setPath( 'aranha/' )
-                        .load( 'Only_Spider_with_Animations_Export.mtl', function ( materials ) {
-                            materials.preload();
-                            new THREE.OBJLoader()
-                                .setMaterials( materials )
-                                .setPath( 'aranha/' )
-                                .load( 'Only_Spider_with_Animations_Export.obj', function ( object ) {
-                                    object.position.set(0, 0, 0);
-                                    object.scale.set(0.01, 0.01, 0.01);
-                                    object.traverse(function(child){
-                                        child.castShadow = true;
-                                    });
-                                    sceneGroupKanji.add(object);
-                                }, onProgress, onError );
-                        } );
-
-                    let light = new THREE.PointLight(0xffffff);
-                    light.position.set(0, 10, 0);
-                    light.castShadow = true;
-                    sceneGroupKanji.add( light );
-                    var geometry = new THREE.SphereGeometry( .1 );
-                    var material = new THREE.MeshBasicMaterial( { color: "white", transparent: true } );
-                    Sphere = new THREE.Mesh( geometry, material );
-                    Sphere.position.copy( light.position );
-                    sceneGroupKanji.add( Sphere );
-                    markerKanji.add( sceneGroupKanji );
-                }else if(markerControlsD.object3d.visible){
-                    //console.log("teste6");
-                    function onProgress(xhr) { console.log( (xhr.loaded / xhr.total * 100) + '% loaded' ); }
-                function onError(xhr) { console.log( 'An error happened' ); }
-
-                new THREE.MTLLoader()
-                    .setPath( 'aranha/' )
-                    .load( 'Only_Spider_with_Animations_Export.mtl', function ( materials ) {
-                        materials.preload();
-                        new THREE.OBJLoader()
-                            .setMaterials( materials )
-                            .setPath( 'aranha/' )
-                            .load( 'Only_Spider_with_Animations_Export.obj', function ( object ) {
-                                object.position.set(0, 0, 0);
-                                object.scale.set(0.01, 0.01, 0.01);
-                                object.traverse(function(child){
-                                    child.castShadow = true;
-                                });
-                                sceneGroupKanji.add(object);
-                            }, onProgress, onError );
-                    } );
-
-                let light = new THREE.PointLight(0xffffff);
-                light.position.set(0, 10, 0);
-                light.castShadow = true;
-                sceneGroupKanji.add( light );
-                var geometry = new THREE.SphereGeometry( .1 );
-                var material = new THREE.MeshBasicMaterial( { color: "white", transparent: true } );
-                Sphere = new THREE.Mesh( geometry, material );
-                Sphere.position.copy( light.position );
-                sceneGroupKanji.add( Sphere );
-                    markerKanji.add( sceneGroupKanji );
-                }else if(markerControlsF.object3d.visible){
-                    //console.log("teste7");
-                    function onProgress(xhr) { console.log( (xhr.loaded / xhr.total * 100) + '% loaded' ); }
-                function onError(xhr) { console.log( 'An error happened' ); }
-
-                new THREE.MTLLoader()
-                    .setPath( 'aranha/' )
-                    .load( 'Only_Spider_with_Animations_Export.mtl', function ( materials ) {
-                        materials.preload();
-                        new THREE.OBJLoader()
-                            .setMaterials( materials )
-                            .setPath( 'aranha/' )
-                            .load( 'Only_Spider_with_Animations_Export.obj', function ( object ) {
-                                object.position.set(0, 0, 0);
-                                object.scale.set(0.01, 0.01, 0.01);
-                                object.traverse(function(child){
-                                    child.castShadow = true;
-                                });
-                                sceneGroupKanji.add(object);
-                            }, onProgress, onError );
-                    } );
-
-                let light = new THREE.PointLight(0xffffff);
-                light.position.set(0, 10, 0);
-                light.castShadow = true;
-                sceneGroupKanji.add( light );
-                var geometry = new THREE.SphereGeometry( .1 );
-                var material = new THREE.MeshBasicMaterial( { color: "white", transparent: true } );
-                Sphere = new THREE.Mesh( geometry, material );
-                Sphere.position.copy( light.position );
-                sceneGroupKanji.add( Sphere );
-                    markerKanji.add( sceneGroupKanji );
-                }else if(markerControlsG.object3d.visible){
-                    //console.log("teste8");
-                    function onProgress(xhr) { console.log( (xhr.loaded / xhr.total * 100) + '% loaded' ); }
-                function onError(xhr) { console.log( 'An error happened' ); }
-
-                new THREE.MTLLoader()
-                    .setPath( 'aranha/' )
-                    .load( 'Only_Spider_with_Animations_Export.mtl', function ( materials ) {
-                        materials.preload();
-                        new THREE.OBJLoader()
-                            .setMaterials( materials )
-                            .setPath( 'aranha/' )
-                            .load( 'Only_Spider_with_Animations_Export.obj', function ( object ) {
-                                object.position.set(0, 0, 0);
-                                object.scale.set(0.01, 0.01, 0.01);
-                                object.traverse(function(child){
-                                    child.castShadow = true;
-                                });
-                                sceneGroupKanji.add(object);
-                            }, onProgress, onError );
-                    } );
-
-                let light = new THREE.PointLight(0xffffff);
-                light.position.set(0, 10, 0);
-                light.castShadow = true;
-                sceneGroupKanji.add( light );
-                var geometry = new THREE.SphereGeometry( .1 );
-                var material = new THREE.MeshBasicMaterial( { color: "white", transparent: true } );
-                Sphere = new THREE.Mesh( geometry, material );
-                Sphere.position.copy( light.position );
-                sceneGroupKanji.add( Sphere );
-                    markerKanji.add( sceneGroupKanji );
-                }else{
-                    markerKanji.remove( sceneGroupKanji );
-                }
-            }else{
-                markerA.remove(sceneGroupHiroA);
-                markerB.remove(sceneGroupHiroB);
-                markerC.remove(sceneGroupHiroC);
-                markerD.remove(sceneGroupHiroD);
-                markerF.remove(sceneGroupHiroF);
-                markerG.remove(sceneGroupHiroG);
-                markerA.add(sceneGroupA);
-                markerB.add(sceneGroupB);
-                markerC.add(sceneGroupC);
-                markerD.add(sceneGroupD);
-                markerF.add(sceneGroupF);
-                markerG.add(sceneGroupG);
-            }
             // update artoolkit on every frame
             if ( arToolkitSource.ready !== false )
                 arToolkitContext.update( arToolkitSource.domElement );

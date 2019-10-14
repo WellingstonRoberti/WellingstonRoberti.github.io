@@ -261,7 +261,7 @@
         var geometryT = new THREE.TorusGeometry( 3, 1.5, 16, 100 );
         var materialT = new THREE.MeshBasicMaterial( { color: "purple" , transparent:true, opacity:0.5} );
         torus = new THREE.Mesh( geometryT, materialT );
-        torus.position.z = 2;
+        torus.position = markerKanji.getWorldPosition();
         function update()
         {
             if(markerControlsHiro.object3d.visible){

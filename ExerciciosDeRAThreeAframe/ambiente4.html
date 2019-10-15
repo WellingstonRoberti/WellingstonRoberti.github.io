@@ -20,10 +20,9 @@
         var scene, camera, renderer, clock, deltaTime, totalTime;
 
         var arToolkitSource, arToolkitContext;
-
+        var mixers = [];
         var markerHiro, markerKanji, markerA, markerB, markerC, markerD, markerG, markerF;
         var markerControlsHiro, markerControlsKanji, markerControlsA, markerControlsB, markerControlsC, markerControlsD, markerControlsG, markerControlsF, markerControls1, markerControls2, markerControls3;
-        let torus;
         var meshModel, meshLight;
         let sceneGroupA = new THREE.Group();
         let sceneGroupB = new THREE.Group();
@@ -32,7 +31,6 @@
         let sceneGroupF = new THREE.Group();
         let sceneGroupHiro = new THREE.Group();
         let sceneGroupKanji = new THREE.Group();
-        const objs = [],objs1 = [],objs2 = [];
         initialize();
         animate();
         
@@ -181,137 +179,102 @@
             markerHiro.add(sceneGroupHiro);
             markerKanji.add(sceneGroupKanji);
 
-            const loader = new THREE.GLTF2Loader();
-            loader.load(
-                'GLTF/phoenix.gltf',
-                ( gltf ) => {
-                    // called when the resource is loaded
-                    
+            
+        var loader = new THREE.GLTF2Loader();
+        loader.load(
+            'GLTF/phoenix_bird.gltf',
+            ( gltf ) => {
+                // called when the resource is loaded
+                const mixer = new THREE.AnimationMixer(gltf.scene);
+                //console.log(gltf.animations);
+                // animations is a list of THREE.AnimationClip
+                for (const anim of gltf.animations) {
+                    mixer.clipAction(anim).play();
+                }
+                gltf.scene.scale.set(0.01, 0.01, 0.01);
+                sceneGroupA.add( gltf.scene );
+                mixers.push(mixer); 
+            }
+        );
 
-                    const mixer = new THREE.AnimationMixer(gltf.scene);
-                    // animations is a list of THREE.AnimationClip
-                    for (const anim of gltf.animations) {
-                        mixer.clipAction(anim).play();
-                    }
-                    sceneGroupA.add( gltf.scene );
-                    objs.push({gltf, mixer});
-                },
-                ( xhr ) => {
-                    // called while loading is progressing
-                    console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
-                },
-                ( error ) => {
-                    // called when loading has errors
-                    console.error( 'An error happened', error );
-                },
-            );
+        var loader = new THREE.GLTF2Loader();
+        loader.load(
+            'GLTF/r2d2.gltf',
+            ( gltf ) => {
+                // called when the resource is loaded
+                const mixer = new THREE.AnimationMixer(gltf.scene);
+                //console.log(gltf.animations);
+                // animations is a list of THREE.AnimationClip
+                for (const anim of gltf.animations) {
+                    mixer.clipAction(anim).play();
+                }
+                sceneGroupB.add( gltf.scene );
+                mixers.push(mixer); 
+            }
+        );
 
-            loader.load(
-                'GLTF/yoda.gltf',
-                ( gltf ) => {
-                    // called when the resource is loaded
-                    
+        var loader = new THREE.GLTF2Loader();
+        loader.load(
+            'GLTF/caveira.gltf',
+            ( gltf ) => {
+                // called when the resource is loaded
+                const mixer = new THREE.AnimationMixer(gltf.scene);
+                //console.log(gltf.animations);
+                // animations is a list of THREE.AnimationClip
+                for (const anim of gltf.animations) {
+                    mixer.clipAction(anim).play();
+                }
+                sceneGroupC.add( gltf.scene );
+                mixers.push(mixer); 
+            }
+        );
 
-                    const mixer = new THREE.AnimationMixer(gltf.scene);
-                    // animations is a list of THREE.AnimationClip
-                    for (const anim of gltf.animations) {
-                        mixer.clipAction(anim).play();
-                    }
-                    sceneGroupB.add( gltf.scene );
-                    objs1.push({gltf, mixer});
-                },
-                ( xhr ) => {
-                    // called while loading is progressing
-                    console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
-                },
-                ( error ) => {
-                    // called when loading has errors
-                    console.error( 'An error happened', error );
-                },
-            );
+        var loader = new THREE.GLTF2Loader();
+        loader.load(
+            'GLTF/yoda.gltf',
+            ( gltf ) => {
+                // called when the resource is loaded
+                const mixer = new THREE.AnimationMixer(gltf.scene);
+                //console.log(gltf.animations);
+                // animations is a list of THREE.AnimationClip
+                for (const anim of gltf.animations) {
+                    mixer.clipAction(anim).play();
+                }
+                sceneGroupD.add( gltf.scene );
+                mixers.push(mixer); 
+            }
+        );
 
-            loader.load(
-                'GLTF/phoenix_bird.gltf',
-                ( gltf ) => {
-                    // called when the resource is loaded
-                    gltf.scene.scale.set(0.01, 0.01, 0.01)
+        var loader = new THREE.GLTF2Loader();
+        loader.load(
+            'GLTF/phoenix.gltf',
+            ( gltf ) => {
+                // called when the resource is loaded
+                const mixer = new THREE.AnimationMixer(gltf.scene);
+                //console.log(gltf.animations);
+                // animations is a list of THREE.AnimationClip
+                for (const anim of gltf.animations) {
+                    mixer.clipAction(anim).play();
+                }
+                sceneGroupF.add( gltf.scene );
+                mixers.push(mixer); 
+            }
+        );
 
-                    const mixer = new THREE.AnimationMixer(gltf.scene);
-                    // animations is a list of THREE.AnimationClip
-                    for (const anim of gltf.animations) {
-                        mixer.clipAction(anim).play();
-                    }
-                    sceneGroupC.add( gltf.scene );
-                    objs2.push({gltf, mixer});
-                },
-                ( xhr ) => {
-                    // called while loading is progressing
-                    console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
-                },
-                ( error ) => {
-                    // called when loading has errors
-                    console.error( 'An error happened', error );
-                },
-            );
-
-            loader.load(
-                'GLTF/r2d2.gltf',
-                ( gltf ) => {
-                    // called when the resource is loaded
-                    
-
-                    const mixer = new THREE.AnimationMixer(gltf.scene);
-                    // animations is a list of THREE.AnimationClip
-                    for (const anim of gltf.animations) {
-                        mixer.clipAction(anim).play();
-                    }
-                    sceneGroupD.add( gltf.scene );
-                    objs.push({gltf, mixer});
-                },
-                ( xhr ) => {
-                    // called while loading is progressing
-                    console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
-                },
-                ( error ) => {
-                    // called when loading has errors
-                    console.error( 'An error happened', error );
-                },
-            );
-
-            loader.load(
-                'GLTF/caveira.gltf',
-                ( gltf ) => {
-                    // called when the resource is loaded
-
-                    const mixer = new THREE.AnimationMixer(gltf.scene);
-                    // animations is a list of THREE.AnimationClip
-                    for (const anim of gltf.animations) {
-                        mixer.clipAction(anim).play();
-                    }
-                    sceneGroupF.add( gltf.scene );
-                    objs5.push({gltf, mixer});
-                },
-                ( xhr ) => {
-                    // called while loading is progressing
-                    console.log( `${( xhr.loaded / xhr.total * 100 )}% loaded` );
-                },
-                ( error ) => {
-                    // called when loading has errors
-                    console.error( 'An error happened', error );
-                },
-            );
+        
         }
 
         
 
         function animate()
         {
-            objs.forEach(({mixer}) => {mixer.update(clock.getDelta());});
-            objs1.forEach(({mixer}) => {mixer.update(clock.getDelta());});
-            objs2.forEach(({mixer}) => {mixer.update(clock.getDelta());});
+            
             requestAnimationFrame(animate);
-            deltaTime = clock.getDelta();
-            totalTime += deltaTime;
+            var mixerUpdateDelta = clock.getDelta();
+				// Update all the animation frames
+				for ( var i = 0; i < mixers.length; ++ i ) {
+					mixers[ i ].update( mixerUpdateDelta );
+				}
             update();
             render();
         }

@@ -32,7 +32,7 @@
         let sceneGroupF = new THREE.Group();
         let sceneGroupHiro = new THREE.Group();
         let sceneGroupKanji = new THREE.Group();
-        const objs = [];
+        const objs = [],objs1 = [],objs2 = [];
         initialize();
         animate();
         
@@ -218,7 +218,7 @@
                         mixer.clipAction(anim).play();
                     }
                     sceneGroupB.add( gltf.scene );
-                    objs.push({gltf, mixer});
+                    objs1.push({gltf, mixer});
                 },
                 ( xhr ) => {
                     // called while loading is progressing
@@ -242,7 +242,7 @@
                         mixer.clipAction(anim).play();
                     }
                     sceneGroupC.add( gltf.scene );
-                    objs.push({gltf, mixer});
+                    objs2.push({gltf, mixer});
                 },
                 ( xhr ) => {
                     // called while loading is progressing
@@ -289,7 +289,7 @@
                         mixer.clipAction(anim).play();
                     }
                     sceneGroupF.add( gltf.scene );
-                    objs.push({gltf, mixer});
+                    objs5.push({gltf, mixer});
                 },
                 ( xhr ) => {
                     // called while loading is progressing
@@ -307,6 +307,8 @@
         function animate()
         {
             objs.forEach(({mixer}) => {mixer.update(clock.getDelta());});
+            objs1.forEach(({mixer}) => {mixer.update(clock.getDelta());});
+            objs2.forEach(({mixer}) => {mixer.update(clock.getDelta());});
             requestAnimationFrame(animate);
             deltaTime = clock.getDelta();
             totalTime += deltaTime;

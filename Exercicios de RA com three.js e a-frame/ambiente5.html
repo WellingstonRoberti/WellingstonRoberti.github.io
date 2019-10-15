@@ -93,13 +93,13 @@ function initialize()
 	markerRootA = new THREE.Group();
 	scene.add(markerRootA);
 	let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRootA, {
-		type: 'pattern', patternUrl: "data/kanji.patt",
+		type: 'pattern', patternUrl: "data/hiro.patt",
 	});
 	
 	markerRootB = new THREE.Group();
 	scene.add(markerRootB);
 	let markerControls2 = new THREEx.ArMarkerControls(arToolkitContext, markerRootB, {
-		type: 'pattern', patternUrl: "data/hiro.patt",
+		type: 'pattern', patternUrl: "data/kanji.patt",
 	});
 	////////////////////////////////////////////////////////////
 	// setup scene
@@ -181,10 +181,10 @@ function parabolaEvaluate(p0, p1, p2, t)
 }
 function parabolicPath( pointStart, pointEnd, time )
 {
-	let pointMiddle = new THREE.Vector3().addVectors( pointStart, pointEnd ).multiplyScalar(0.5).add( new THREE.Vector3(0,0,0) );
+	let pointMiddle = new THREE.Vector3().addVectors( pointStart, pointEnd ).multiplyScalar(0.5).add( new THREE.Vector3(0,2,0) );
 	return new THREE.Vector3(
 		parabolaEvaluate( pointStart.x, pointMiddle.x, pointEnd.x, time ),
-		0,
+		parabolaEvaluate( pointStart.y, pointMiddle.y, pointEnd.y, time ),
 		parabolaEvaluate( pointStart.z, pointMiddle.z, pointEnd.z, time )
 	);	
 }
@@ -204,4 +204,3 @@ function animate()
 
 </body>
 </html>
-

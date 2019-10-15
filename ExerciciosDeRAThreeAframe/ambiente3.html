@@ -1,29 +1,48 @@
 <!DOCTYPE html>
+<html>
+<!-- include a-frame -->
 <script src="js/aframe.min.js"></script>
-<!-- include aframe-ar.js -->
-<script src="js/aframe-ar.js"></script>
 
-<body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
-	<!-- <a-scene embedded arjs='sourceType: image; sourceUrl:../../data/images/armchair.jpg;'> -->
-	<a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
+<!-- include ar.js for aframe -->
+<script src='js/aframe-ar.js'></script>
+<script>ARjs.Context.baseURL = '../../three.js/'</script>
+
+<!-- start the body of your page -->
+<body style='margin : 0px; overflow: hidden;'>
+	<!-- add some info at the top of the page -->
+
+	<!-- Define your 3d scene and enabled ar.js -->
+	<a-scene embedded arjs='trackingMethod: best; debugUIEnabled: false;'>
+
+		<!-- Create a anchor to attach your augmented reality -->
+		<a-anchor hit-testing-enabled='true'>
+
+			<!-- Add your augmented reality here -->
 			<a-entity id="pai">
-					<a-sphere id="Sol" radius=".5" material="shader: flat; src: imagens/Sol.jpg ">
-						<a-entity id="luz" light="type: spot;
-							castShadow: true;
-							intensity: 1.5;">
-						</a-entity>
-					</a-sphere>
-					<a-entity animation="property: rotation; to: 0 360 0; loop: true; easing: linear; dur: 15000">
-						<a-sphere id="planeta1" radius=".1"  material="src: imagens/jupitermap.jpg" animation="property: rotation; to: 0 360 0; loop: true; easing: linear; dur: 5000" position="0 0 1" shadow></a-sphere>
+				<a-sphere id="Sol" radius=".5" material="shader: flat; src: imagens/Sol.jpg ">
+					<a-entity id="luz" light="type: spot;
+						castShadow: true;
+						intensity: 1.5;">
 					</a-entity>
-					<a-entity animation="property: rotation; to: 0 360 0; loop: true; easing: linear; dur: 5000">
-						<a-sphere id="planeta2" radius=".2"  material="src: imagens/neptune.jpg " animation="property: rotation; to: 0 360 0; loop: true; easing: linear; dur: 10000" position="0 0 2" shadow></a-sphere>
-					</a-entity>
-					<a-entity animation="property: rotation; to: 0 360 0; loop: true; easing: linear; dur: 10000">
-						<a-sphere id="planeta3" radius=".3"  material="src: imagens/earthmap1k.jpg" animation="property: rotation; to: 0 360 0; loop: true; easing: linear; dur: 15000" position="0 0 2.5" shadow></a-sphere>
-					</a-entity>
+				</a-sphere>
+				<a-entity animation="property: rotation; to: 0 360 0; loop: true; easing: linear; dur: 15000">
+					<a-sphere id="planeta1" radius=".1"  material="src: imagens/jupitermap.jpg" animation="property: rotation; to: 0 360 0; loop: true; easing: linear; dur: 5000" position="0 0 1" shadow></a-sphere>
 				</a-entity>
-		<a-marker-camera preset='hiro'></a-marker-camera>
+				<a-entity animation="property: rotation; to: 0 360 0; loop: true; easing: linear; dur: 5000">
+					<a-sphere id="planeta2" radius=".2"  material="src: imagens/neptune.jpg " animation="property: rotation; to: 0 360 0; loop: true; easing: linear; dur: 10000" position="0 0 2" shadow></a-sphere>
+				</a-entity>
+				<a-entity animation="property: rotation; to: 0 360 0; loop: true; easing: linear; dur: 10000">
+					<a-sphere id="planeta3" radius=".3"  material="src: imagens/earthmap1k.jpg" animation="property: rotation; to: 0 360 0; loop: true; easing: linear; dur: 15000" position="0 0 2.5" shadow></a-sphere>
+				</a-entity>
+			</a-entity>
+
+		</a-anchor>
+
+		<!-- Define a static camera -->
+		<a-camera-static/>
+
 	</a-scene>
 </body>
+
 </html>
+

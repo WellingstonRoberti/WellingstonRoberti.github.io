@@ -5,27 +5,7 @@
     <title>Exercício 2</title>
     <!-- include three.js library -->
     <script src='js/three.min.js'></script>
-    <script src='js/GLTF2Loader.js'></script>
-    <script src='three.js/src/threex/threex-artoolkitsource.js'></script>
-    <script src='three.js/src/threex/threex-artoolkitcontext.js'></script>
-    <script src='three.js/src/threex/threex-artoolkitprofile.js'></script>
-    <script src='three.js/src/threex/threex-arbasecontrols.js'></script>
-    <script src='three.js/src/threex/threex-armarkercontrols.js'></script>
-    <script src='three.js/src/threex/threex-armarkerhelper.js'></script>
-    <script src='three.js/src/threex/threex-arsmoothedcontrols.js'></script>
-    <script src='three.js/src/threex/threex-hittesting-plane.js'></script>
-    <script src='three.js/src/threex/threex-hittesting-tango.js'></script>
-    <script src='three.js/src/new-api/arjs-utils.js'></script>
-    <script src='three.js/src/new-api/arjs-session.js'></script>
-    <script src='three.js/src/new-api/arjs-anchor.js'></script>
-    <script src='three.js/src/new-api/arjs-hittesting.js'></script>
-    <script src='three.js/src/new-api/arjs-tangovideomesh.js'></script>
-    <script src='three.js/src/new-api/arjs-tangopointcloud.js'></script>
-    <script src='three.js/src/new-api/arjs-debugui.js'></script>
-    <script src='three.js/src/markers-area/threex-armultimarkerutils.js'></script>
-    <script src='three.js/src/markers-area/threex-armultimarkercontrols.js'></script>
-    <script src='three.js/src/markers-area/threex-armultimarkerlearning.js'></script>
-    
+    <script src='js/GLTF2Loader.js'></script>    
     <!-- include jsartookit -->
     <script src="jsartoolkit5/artoolkit.min.js"></script>
     <script src="jsartoolkit5/artoolkit.api.js"></script>
@@ -35,15 +15,9 @@
     <script src="threex/threex-arbasecontrols.js"></script>
     <script src="threex/threex-armarkercontrols.js"></script>
 </head>
-<style>
-        #recordButton:hover  {
-            cursor: pointer;
-        }
-    </style>
+
 <body>
-        <div style='position: fixed; bottom: 16px; right: 16px; z-index:2';>
-                <img id='recordStartButton' src="imagens/record-start.png" width='128px'  height='64px' onclick='aprender()'>
-            </div>
+
     <script>
         var scene, camera, renderer, clock, deltaTime, totalTime;
 
@@ -210,6 +184,7 @@
                 'GLTF/phoenix_bird.gltf',
                 ( gltf ) => {
                     // called when the resource is loaded
+                    gltf.scene.name = 'bird';
                     const mixer = new THREE.AnimationMixer(gltf.scene);
                     //console.log(gltf.animations);
                     // animations is a list of THREE.AnimationClip
@@ -226,15 +201,8 @@
             loader.load(
                 'GLTF/r2d2.gltf',
                 ( gltf ) => {
-                    // called when the resource is loaded
-                    const mixer = new THREE.AnimationMixer(gltf.scene);
-                    //console.log(gltf.animations);
-                    // animations is a list of THREE.AnimationClip
-                    for (const anim of gltf.animations) {
-                        mixer.clipAction(anim).play();
-                    }
+                    gltf.scene.name = 'r2d2';
                     sceneGroupB.add( gltf.scene );
-                    mixers.push(mixer); 
                 }
             );
 
@@ -242,22 +210,15 @@
             loader.load(
                 'GLTF/caveira.gltf',
                 ( gltf ) => {
-                    // called when the resource is loaded
-                    const mixer = new THREE.AnimationMixer(gltf.scene);
-                    //console.log(gltf.animations);
-                    // animations is a list of THREE.AnimationClip
-                    for (const anim of gltf.animations) {
-                        mixer.clipAction(anim).play();
-                    }
-                    sceneGroupC.add( gltf.scene );
-                    mixers.push(mixer); 
+                    gltf.scene.name = 'caveira';
+                    sceneGroupC.add( gltf.scene ); 
                 }
             );
-
             var loader = new THREE.GLTF2Loader();
             loader.load(
                 'GLTF/yoda.gltf',
                 ( gltf ) => {
+                    gltf.scene.name = 'yoda';
                     // called when the resource is loaded
                     const mixer = new THREE.AnimationMixer(gltf.scene);
                     //console.log(gltf.animations);
@@ -274,6 +235,7 @@
             loader.load(
                 'GLTF/phoenix.gltf',
                 ( gltf ) => {
+                    gltf.scene.name = 'phoenix';
                     // called when the resource is loaded
                     const mixer = new THREE.AnimationMixer(gltf.scene);
                     //console.log(gltf.animations);
@@ -286,12 +248,6 @@
                 }
             );
         }
-        
-        function aprender(){
-                var learnerURL = THREEx.ArToolkitContext.baseURL + 'examples/multi-markers/examples/learner.html'
-                THREEx.ArMultiMarkerUtils.navigateToLearnerPage(learnerURL, arToolkitContext.parameters.trackingBackend)
-        }
-        
 
         function animate()
         {
@@ -305,11 +261,11 @@
             update();
             render();
         }
+
         function update()
         {
             if(markerControlsKanji.object3d.visible){
                 
-                console.log("testeKanji");
                 markerA.remove(sceneGroupB);
                 markerA.remove(sceneGroupC);
                 markerA.remove(sceneGroupD);
@@ -336,22 +292,22 @@
                 markerG.remove(sceneGroupF);
 
                 if(markerControlsA.object3d.visible){
-                    //console.log("teste3");
+                    var obj = sceneGroupA.getObjectByName('bird').position.set(2.5,0,1);
                     markerA.add( sceneGroupA );
                 }else if(markerControlsB.object3d.visible){
-                    //console.log("teste4");
+                    var obj = sceneGroupA.getObjectByName('bird').position.set(0,0,1);
                     markerB.add( sceneGroupA );
                 }else if(markerControlsC.object3d.visible){
-                   // console.log("teste5");
+                    var obj = sceneGroupA.getObjectByName('bird').position.set(-2.5,0,1);
                     markerC.add( sceneGroupA );
                 }else if(markerControlsD.object3d.visible){
-                    //console.log("teste6");
+                    var obj = sceneGroupA.getObjectByName('bird').position.set(2.5,0,-1);
                     markerD.add( sceneGroupA );
                 }else if(markerControlsF.object3d.visible){
-                    //console.log("teste7");
+                    var obj = sceneGroupA.getObjectByName('bird').position.set(-2.5,0,-1);
                     markerF.add( sceneGroupA );
                 }else if(markerControlsG.object3d.visible){
-                    //console.log("teste8");
+                    var obj = sceneGroupA.getObjectByName('bird').position.set(0,0,-1);
                     markerG.add( sceneGroupA );
                 }else{
                     markerA.remove(sceneGroupA);
@@ -387,7 +343,6 @@
                 }
             }else if(markerControlsHiro.object3d.visible){
                 
-                console.log("testeHiro");
                 markerA.remove(sceneGroupA);
                 markerA.remove(sceneGroupC);
                 markerA.remove(sceneGroupD);
@@ -414,22 +369,22 @@
                 markerG.remove(sceneGroupF);
 
                 if(markerControlsA.object3d.visible){
-                    //console.log("teste3");
+                    sceneGroupB.getObjectByName('r2d2').position.set(2.5,0,1);
                     markerA.add( sceneGroupB );
                 }else if(markerControlsB.object3d.visible){
-                    //console.log("teste4");
+                    sceneGroupB.getObjectByName('r2d2').position.set(0,0,1);
                     markerB.add( sceneGroupB);
                 }else if(markerControlsC.object3d.visible){
-                   // console.log("teste5");
+                    sceneGroupB.getObjectByName('r2d2').position.set(-2.5,0,1);
                     markerC.add( sceneGroupB );
                 }else if(markerControlsD.object3d.visible){
-                    //console.log("teste6");
+                    sceneGroupB.getObjectByName('r2d2').position.set(2.5,0,-1);
                     markerD.add( sceneGroupB );
                 }else if(markerControlsF.object3d.visible){
-                    //console.log("teste7");
+                    sceneGroupB.getObjectByName('r2d2').position.set(-2.5,0,-1);
                     markerF.add( sceneGroupB );
                 }else if(markerControlsG.object3d.visible){
-                    //console.log("teste8");
+                    sceneGroupB.getObjectByName('r2d2').position.set(0,0,-1);
                     markerG.add( sceneGroupB );
                 }else{
                     markerA.remove(sceneGroupA);
@@ -465,7 +420,6 @@
                 }
             }else if(markerControls1.object3d.visible){
                 
-                console.log("teste1");
                 markerA.remove(sceneGroupA);
                 markerA.remove(sceneGroupB);
                 markerA.remove(sceneGroupD);
@@ -492,22 +446,22 @@
                 markerG.remove(sceneGroupF);
 
                 if(markerControlsA.object3d.visible){
-                    //console.log("teste3");
+                    sceneGroupC.getObjectByName('caveira').position.set(2.5,0,1);
                     markerA.add( sceneGroupC );
                 }else if(markerControlsB.object3d.visible){
-                    //console.log("teste4");
+                    sceneGroupC.getObjectByName('caveira').position.set(0,0,1);
                     markerB.add( sceneGroupC );
                 }else if(markerControlsC.object3d.visible){
-                   // console.log("teste5");
+                   sceneGroupC.getObjectByName('caveira').position.set(-2.5,0,1);
                     markerC.add( sceneGroupC );
                 }else if(markerControlsD.object3d.visible){
-                    //console.log("teste6");
+                    sceneGroupC.getObjectByName('caveira').position.set(2.5,0,-1);
                     markerD.add( sceneGroupC );
                 }else if(markerControlsF.object3d.visible){
-                    //console.log("teste7");
+                    sceneGroupC.getObjectByName('caveira').position.set(-2.5,0,-1);
                     markerF.add( sceneGroupC );
                 }else if(markerControlsG.object3d.visible){
-                    //console.log("teste8");
+                    sceneGroupC.getObjectByName('caveira').position.set(0,0,-1);
                     markerG.add( sceneGroupC );
                 }else{
                     markerA.remove(sceneGroupA);
@@ -543,7 +497,6 @@
                 }
             }else if(markerControls2.object3d.visible){
                 
-                console.log("teste2");
                 markerA.remove(sceneGroupA);
                 markerA.remove(sceneGroupB);
                 markerA.remove(sceneGroupC);
@@ -570,22 +523,22 @@
                 markerG.remove(sceneGroupF);
 
                 if(markerControlsA.object3d.visible){
-                    //console.log("teste3");
+                    sceneGroupD.getObjectByName('yoda').position.set(2.5,0,1);
                     markerA.add( sceneGroupD );
                 }else if(markerControlsB.object3d.visible){
-                    //console.log("teste4");
+                    sceneGroupD.getObjectByName('yoda').position.set(0,0,1);
                     markerB.add( sceneGroupD );
                 }else if(markerControlsC.object3d.visible){
-                   // console.log("teste5");
+                   sceneGroupD.getObjectByName('yoda').position.set(-2.5,0,1);
                     markerC.add( sceneGroupD );
                 }else if(markerControlsD.object3d.visible){
-                    //console.log("teste6");
+                    sceneGroupD.getObjectByName('yoda').position.set(2.5,0,-1);
                     markerD.add( sceneGroupD );
                 }else if(markerControlsF.object3d.visible){
-                    //console.log("teste7");
+                    sceneGroupD.getObjectByName('yoda').position.set(-2.5,0,-1);
                     markerF.add( sceneGroupD );
                 }else if(markerControlsG.object3d.visible){
-                    //console.log("teste8");
+                    sceneGroupD.getObjectByName('yoda').position.set(0,0,-1);
                     markerG.add( sceneGroupD );
                 }else{
                     markerA.remove(sceneGroupA);
@@ -621,7 +574,6 @@
                 }
             }else if(markerControls3.object3d.visible){
                 
-                console.log("teste3");
                 markerA.remove(sceneGroupA);
                 markerA.remove(sceneGroupB);
                 markerA.remove(sceneGroupC);
@@ -648,22 +600,22 @@
                 markerG.remove(sceneGroupD);
 
                 if(markerControlsA.object3d.visible){
-                    //console.log("teste3");
+                    sceneGroupF.getObjectByName('phoenix').position.set(2.5,0,1);
                     markerA.add( sceneGroupF );
                 }else if(markerControlsB.object3d.visible){
-                    //console.log("teste4");
+                    sceneGroupF.getObjectByName('phoenix').position.set(0,0,1);
                     markerB.add( sceneGroupF );
                 }else if(markerControlsC.object3d.visible){
-                   // console.log("teste5");
+                   sceneGroupF.getObjectByName('phoenix').position.set(-2.5,0,1);
                     markerC.add( sceneGroupF );
                 }else if(markerControlsD.object3d.visible){
-                    //console.log("teste6");
+                    sceneGroupF.getObjectByName('phoenix').position.set(2.5,0,-1);
                     markerD.add( sceneGroupF );
                 }else if(markerControlsF.object3d.visible){
-                    //console.log("teste7");
+                    sceneGroupF.getObjectByName('phoenix').position.set(-2.5,0,-1);
                     markerF.add( sceneGroupF );
                 }else if(markerControlsG.object3d.visible){
-                    //console.log("teste8");
+                    sceneGroupF.getObjectByName('phoenix').position.set(0,0,-1);
                     markerG.add( sceneGroupF );
                 }else{
                     markerA.remove(sceneGroupA);
@@ -728,7 +680,6 @@
                 markerG.remove(sceneGroupC);
                 markerG.remove(sceneGroupD);
                 markerG.remove(sceneGroupF);
-                console.log("testeelse");
             }
 
 

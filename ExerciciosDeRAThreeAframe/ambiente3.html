@@ -5,7 +5,7 @@
 
 <!-- include ar.js for aframe -->
 <script src='js/aframe-ar.js'></script>
-<script>ARjs.Context.baseURL = '../../ExerciciosDeRAThreeAframe/'</script>
+<script>ARjs.Context.baseURL = '../../ExerciciosDeRAThreeAframe/three.js'</script>
 
 <!-- start the body of your page -->
 <body style='margin : 0px; overflow: hidden;'>
@@ -20,7 +20,7 @@
 			<!-- Add your augmented reality here -->
 			<a-entity id="pai" position="0 1 0">
 				<a-sphere id="Sol" radius=".5" material="shader: flat; src: imagens/Sol.jpg ">
-					<a-entity id="luz" light="type: spot;
+					<a-entity id="luz" light="type: point;
 						castShadow: true;
 						intensity: 1.5;">
 					</a-entity>

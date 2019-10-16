@@ -8015,7 +8015,7 @@ ARjs.MarkersAreaUtils.createDefaultMultiMarkerFile = function(trackingBackend){
 	var link = document.createElement('a')
 	link.href = ARjs.Context.baseURL
 	var absoluteBaseURL = link.href
-	console.log(absoluteBaseURL)
+	
 	// create the base file
 	var file = {
 		meta : {

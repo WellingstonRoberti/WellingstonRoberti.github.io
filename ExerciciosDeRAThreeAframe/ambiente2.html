@@ -170,35 +170,41 @@
 
             //Objetos para cada marcador
             var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-            var material = new THREE.MeshBasicMaterial( { color: "blue" , transparent:true, opacity:0.5} );
+            var material = new THREE.MeshBasicMaterial( { color: "blue" , transparent:true, opacity:0.5, side: THREE.DoubleSide} );
             cube1 = new THREE.Mesh( geometry, material );
+            cube1.position.set(0,.5,0);
             //cube.rotation.set(10,30,0);
             sceneGroupA.add( cube1 );
 
-            var material = new THREE.MeshBasicMaterial( { color: "red" , transparent:true, opacity:0.5} );
+            var material = new THREE.MeshBasicMaterial( { color: "red" , transparent:true, opacity:0.5, side: THREE.DoubleSide} );
             cube2 = new THREE.Mesh( geometry, material );
+            cube2.position.set(0,.5,0);
             //cube.rotation.set(10,30,0);
             sceneGroupB.add( cube2 );
 
-            var material = new THREE.MeshBasicMaterial( { color: "yellow" , transparent:true, opacity:0.5} );
+            var material = new THREE.MeshBasicMaterial( { color: "yellow" , transparent:true, opacity:0.5, side: THREE.DoubleSide} );
             cube3 = new THREE.Mesh( geometry, material );
+            cube3.position.set(0,.5,0);
             //cube.rotation.set(10,30,0);
             sceneGroupC.add( cube3 );
 
 
-            var material = new THREE.MeshBasicMaterial( { color: "orange" , transparent:true, opacity:0.5} );
+            var material = new THREE.MeshBasicMaterial( { color: "orange" , transparent:true, opacity:0.5, side: THREE.DoubleSide} );
             cube4 = new THREE.Mesh( geometry, material );
+            cube4.position.set(0,.5,0);
             //cube.rotation.set(10,30,0);
             sceneGroupD.add( cube4 );
             
 
-            var material = new THREE.MeshBasicMaterial( { color: "darkgreen" , transparent:true, opacity:0.5} );
+            var material = new THREE.MeshBasicMaterial( { color: "darkgreen" , transparent:true, opacity:0.5, side: THREE.DoubleSide} );
             cube5 = new THREE.Mesh( geometry, material );
+            cube5.position.set(0,.5,0);
             //cube.rotation.set(10,30,0);
             sceneGroupF.add( cube5 );
 
-            var material = new THREE.MeshBasicMaterial( { color: "purple" , transparent:true, opacity:0.5} );
+            var material = new THREE.MeshBasicMaterial( { color: "purple" , transparent:true, opacity:0.5, side: THREE.DoubleSide} );
             cube6 = new THREE.Mesh( geometry, material );
+            cube6.position.set(0,.5,0);
             //cube.rotation.set(10,30,0);
             sceneGroupG.add( cube6 );
 
@@ -208,36 +214,42 @@
             var geometry = new THREE.SphereGeometry( 1 );
             var material = new THREE.MeshBasicMaterial( { color: "blue" , transparent:true, opacity:0.5} );
             Sphere1 = new THREE.Mesh( geometry, material );
-            //Sphere.rotation.set(10,30,0);
+            Sphere1.position.set(0,1,0);
+            //Sphere.position.set(0,.5,0);
             sceneGroupHiroA.add( Sphere1 );
 
             var geometry = new THREE.SphereGeometry( 1 );
             var material = new THREE.MeshBasicMaterial( { color: "red" , transparent:true, opacity:0.5} );
             Sphere2 = new THREE.Mesh( geometry, material );
+            Sphere2.position.set(0,1,0);
             //Sphere.rotation.set(10,30,0);
             sceneGroupHiroB.add( Sphere2 );
 
             var geometry = new THREE.SphereGeometry( 1 );
             var material = new THREE.MeshBasicMaterial( { color: "yellow" , transparent:true, opacity:0.5} );
             Sphere3 = new THREE.Mesh( geometry, material );
+            Sphere3.position.set(0,1,0);
             //Sphere.rotation.set(10,30,0);
             sceneGroupHiroC.add( Sphere3 );
 
             var geometry = new THREE.SphereGeometry( 1 );
             var material = new THREE.MeshBasicMaterial( { color: "orange" , transparent:true, opacity:0.5} );
             Sphere4 = new THREE.Mesh( geometry, material );
+            Sphere4.position.set(0,1,0);
             //Sphere.rotation.set(10,30,0);
             sceneGroupHiroD.add( Sphere4 );
             
             var geometry = new THREE.SphereGeometry( 1 );
             var material = new THREE.MeshBasicMaterial( { color: "darkgreen", transparent:true, opacity:0.5});
             Sphere5 = new THREE.Mesh( geometry, material );
+            Sphere5.position.set(0,1,0);
             //Sphere.rotation.set(10,30,0);
             sceneGroupHiroF.add( Sphere5 );
 
             var geometry = new THREE.SphereGeometry( 1 );
             var material = new THREE.MeshBasicMaterial( { color: "purple" , transparent:true, opacity:0.5} );
             Sphere6 = new THREE.Mesh( geometry, material );
+            Sphere6.position.set(0,1,0);
             //Sphere.rotation.set(10,30,0);
             sceneGroupHiroG.add( Sphere6 );
 
@@ -258,10 +270,10 @@
             update();
             render();
         }
-        var geometryT = new THREE.TorusGeometry( 3, 1.5, 16, 100 );
+        var geometryT = new THREE.TorusGeometry( 1, .5, 16, 32 );
         var materialT = new THREE.MeshBasicMaterial( { color: "purple" , transparent:true, opacity:0.5} );
         torus = new THREE.Mesh( geometryT, materialT );
-        torus.position = markerKanji.getWorldPosition();
+        torus.position.set(2.5,0,1);
         function update()
         {
             if(markerControlsHiro.object3d.visible){
@@ -295,26 +307,32 @@
                 markerG.remove(sceneGroupHiroG);
                 if(markerControlsA.object3d.visible){
                     //console.log("teste3");
+                    torus.position.set(2.5,0,1);
                     sceneGroupTorus.add( torus );
                     markerA.add( sceneGroupTorus );
                 }else if(markerControlsB.object3d.visible){
                     //console.log("teste4");
+                    torus.position.set(0,0,1);
                     sceneGroupTorus.add( torus );
                     markerB.add( sceneGroupTorus );
                 }else if(markerControlsC.object3d.visible){
                    // console.log("teste5");
+                   torus.position.set(-2.5,0,1);
                    sceneGroupTorus.add( torus );
                     markerC.add( sceneGroupTorus );
                 }else if(markerControlsD.object3d.visible){
                     //console.log("teste6");
+                    torus.position.set(2.5,0,-1);
                     sceneGroupTorus.add( torus );
                     markerD.add( sceneGroupTorus );
                 }else if(markerControlsF.object3d.visible){
                     //console.log("teste7");
+                    torus.position.set(0,0,-1);
                     sceneGroupTorus.add( torus );
                     markerF.add( sceneGroupTorus );
                 }else if(markerControlsG.object3d.visible){
                     //console.log("teste8");
+                    torus.position.set(-2.5,0,-1);
                     sceneGroupTorus.add( torus );
                     markerG.add( sceneGroupTorus );
                 }else{

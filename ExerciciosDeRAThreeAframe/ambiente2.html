@@ -273,7 +273,6 @@
         var geometryT = new THREE.TorusGeometry( 1, .5, 16, 32 );
         var materialT = new THREE.MeshBasicMaterial( { color: "purple" , transparent:true, opacity:0.5} );
         torus = new THREE.Mesh( geometryT, materialT );
-        torus.position.set(2.5,0,1);
         function update()
         {
             if(markerControlsHiro.object3d.visible){

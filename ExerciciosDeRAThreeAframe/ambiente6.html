@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exercício 1</title>
+    <!-- include three.js library -->
+    <script src='js/three.min.js'></script>
+    <script src='js/OBJLoader.js'></script>
+    <script src='js/MTLLoader.js'></script>
+    <!-- include jsartookit -->
+    <script src="jsartoolkit5/artoolkit.min.js"></script>
+    <script src="jsartoolkit5/artoolkit.api.js"></script>
+    <!-- include threex.artoolkit -->
+    <script src="threex/threex-artoolkitsource.js"></script>
+    <script src="threex/threex-artoolkitcontext.js"></script>
+    <script src="threex/threex-arbasecontrols.js"></script>
+    <script src="threex/threex-armarkercontrols.js"></script>
+
+
+</head>
+<body>
+    <script>
+        var scene, camera, renderer, clock, deltaTime, totalTime;
+        var onRenderFcts= [];
+
+        var arToolkitSource, arToolkitContext;
+
+        var markerHiro, markerKanji, markerA, markerB, markerC, markerD, markerG, markerF, marker1, marker2, marker3, marker4, marker5, marker6;
+
+        var markerControlsHiro, markerControlsKanji, markerControlsA, markerControlsB, markerControlsC, markerControlsD, markerControlsG, markerControlsF, markerControls1, markerControls2, markerControls3, markerControls4, markerControls5, markerControls6;
+        var collidableMeshList = [];
+        var torus;
+        var meshModel, meshLight;
+
+        var vetorCores = ['red', 'green', 'yellow', 'orange', 'blue', 'purple'];
+        var vetorObjeto = ['cubo', 'esfera', 'cilindro', 'cone'];
+
+        var vetorGeometria = [new THREE.BoxGeometry( .5, .5, .5 ), new THREE.SphereGeometry(.3, 32, 32 ), new THREE.CylinderGeometry( .3, .3, .8, radialSegments = 32 ), new THREE.ConeGeometry( .3, .4, 32 )];
+
+        let sceneGroupKanji, sceneGroupHiro;
+        initialize();
+
+        function initialize() {
+            scene = new THREE.Scene();
+
+            camera = new THREE.Camera();
+            scene.add(camera);
+
+            renderer = new THREE.WebGLRenderer({
+                antialias : true,
+                alpha: true
+            });
+            renderer.setClearColor(new THREE.Color('lightgrey'), 0)
+            renderer.setSize( window.innerWidth*1, window.innerHeight*1 );
+            renderer.domElement.style.position = 'absolute'
+            renderer.domElement.style.top = '0px'
+            renderer.domElement.style.left = '0px'
+            document.body.appendChild( renderer.domElement );
+
+            clock = new THREE.Clock();
+            deltaTime = 0;
+            totalTime = 0;
+
+            ////////////////////////////////////////////////////////////
+            // setup arToolkitSource
+            ////////////////////////////////////////////////////////////
+
+            arToolkitSource = new THREEx.ArToolkitSource({
+                sourceType : 'webcam',
+            });
+
+            function onResize()
+            {
+                arToolkitSource.onResize()
+                arToolkitSource.copySizeTo(renderer.domElement)
+                if ( arToolkitContext.arController !== null )
+                {
+                    arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)
+                }
+            }
+
+            arToolkitSource.init(function onReady(){
+                onResize()
+            });
+
+            // handle resize event
+            window.addEventListener('resize', function(){
+                onResize()
+            });
+
+            ////////////////////////////////////////////////////////////
+            // setup arToolkitContext
+            ////////////////////////////////////////////////////////////
+
+            // create atToolkitContext
+            arToolkitContext = new THREEx.ArToolkitContext({
+                cameraParametersUrl: 'data/camera_para.dat',
+                detectionMode: 'mono'
+            });
+
+            // copy projection matrix to camera when initialization complete
+            arToolkitContext.init( function onCompleted(){
+                camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
+            });
+
+            ////////////////////////////////////////////////////////////
+            // setup markerRoots
+            ////////////////////////////////////////////////////////////
+
+            // build markerControls
+            markerHiro = new THREE.Group();
+            scene.add(markerHiro);
+            markerControlsHiro = new THREEx.ArMarkerControls(arToolkitContext, markerHiro, {
+                type: 'pattern', patternUrl: "data/hiro.patt",
+            })
+
+            markerKanji = new THREE.Group();
+            scene.add(markerKanji);
+            markerControlsKanji = new THREEx.ArMarkerControls(arToolkitContext, markerKanji, {
+                type: 'pattern', patternUrl: "data/kanji.patt",
+            })
+
+            marker1 = new THREE.Group();
+            scene.add(marker1);
+            markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, marker1, {
+                type: 'pattern', patternUrl: "data/1.patt",
+            })
+
+            marker2 = new THREE.Group();
+            scene.add(marker2);
+            markerControls2 = new THREEx.ArMarkerControls(arToolkitContext, marker2, {
+                type: 'pattern', patternUrl: "data/2.patt",
+            })
+
+            marker3 = new THREE.Group();
+            scene.add(marker3);
+            markerControls3 = new THREEx.ArMarkerControls(arToolkitContext, marker3, {
+                type: 'pattern', patternUrl: "data/3.patt",
+            })
+
+            marker4 = new THREE.Group();
+            scene.add(marker4);
+            markerControls4 = new THREEx.ArMarkerControls(arToolkitContext, marker4, {
+                type: 'pattern', patternUrl: "data/4.patt",
+            })
+
+            marker5 = new THREE.Group();
+            scene.add(marker5);
+            markerControls5 = new THREEx.ArMarkerControls(arToolkitContext, marker5, {
+                type: 'pattern', patternUrl: "data/5.patt",
+            })
+
+            marker6 = new THREE.Group();
+            scene.add(marker6);
+            markerControls6 = new THREEx.ArMarkerControls(arToolkitContext, marker6, {
+                type: 'pattern', patternUrl: "data/6.patt",
+            })
+
+            markerA = new THREE.Group();
+            scene.add(markerA);
+            markerControlsA = new THREEx.ArMarkerControls(arToolkitContext, markerA, {
+                type: 'pattern', patternUrl: "data/letterA.patt",
+            })
+
+            markerB = new THREE.Group();
+            scene.add(markerB);
+            markerControlsB = new THREEx.ArMarkerControls(arToolkitContext, markerB, {
+                type: 'pattern', patternUrl: "data/letterB.patt",
+            })
+
+            markerC = new THREE.Group();
+            scene.add(markerC);
+            markerControlsC = new THREEx.ArMarkerControls(arToolkitContext, markerC, {
+                type: 'pattern', patternUrl: "data/letterC.patt",
+            })
+
+            markerD = new THREE.Group();
+            scene.add(markerD);
+            markerControlsD = new THREEx.ArMarkerControls(arToolkitContext, markerD, {
+                type: 'pattern', patternUrl: "data/letterD.patt",
+            })
+
+            markerF = new THREE.Group();
+            scene.add(markerF);
+            markerControlsF = new THREEx.ArMarkerControls(arToolkitContext, markerF, {
+                type: 'pattern', patternUrl: "data/letterF.patt",
+            })
+
+            markerG = new THREE.Group();
+            scene.add(markerG);
+            markerControlsG = new THREEx.ArMarkerControls(arToolkitContext, markerG, {
+                type: 'pattern', patternUrl: "data/letterG.patt",
+            })
+
+            ////////////////////////////////////////////////////////////
+            // setup scene
+            ////////////////////////////////////////////////////////////
+
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+            sceneGroupHiro = new THREE.Group();
+            sceneGroupKanji = new THREE.Group();
+            markerHiro.add(sceneGroupHiro);
+            markerKanji.add(sceneGroupKanji);
+
+
+            let light = new THREE.PointLight(0xffffff);
+            light.position.set(0, 2, 0);
+            light.castShadow = true;
+            sceneGroupKanji.add( light );
+            var geometry = new THREE.TorusGeometry( .2, .01  , 16, 32 );
+            var material = new THREE.MeshPhongMaterial( { color: "lightgreen"} );
+            torus = new THREE.Mesh( geometry, material );
+            torus.position.y = .1;
+           // torus.position.z = 4;
+            torus.rotation.x = Math.PI/2;
+            torus.name = 'arco';
+            sceneGroupKanji.add( torus );
+            var geometry = new THREE.ConeGeometry(1, 2, 32);
+            var material = new THREE.MeshPhongMaterial( { color: "lightgreen" } );
+            cone = new THREE.Mesh( geometry, material );
+            cone.position.x -= 0.2;
+            cone.scale.set(.03,.03,.03);
+            torus.add(cone);
+        //     var geometry = new THREE.TorusGeometry( .2, .01  , 16, 32 );
+        //     var material = new THREE.MeshPhongMaterial( { color: "lightgreen", wireframe: true} );
+        //     torus = new THREE.Mesh( geometry, material );
+        //     torus.position.y = .1;
+        //    // torus.position.z = 4;
+        //     torus.rotation.x = Math.PI/2;
+        //     torus.name = 'arco';
+        //     sceneGroupKanji.add( torus );
+
+            // // compute collider shape from mesh.geometry.vertices
+            // var box3	= new THREE.Box3()
+            // box3.setFromPoints( torus.geometry.vertices );
+            // // init collider
+            // var collider	= new THREEx.ColliderBox3(torus, box3)
+            // colliders.push(collider)
+            // // colliderSystem.add(collider)
+            // onRenderFcts.push(function(delta){
+            //     collider.update()
+            // })
+            // collider.addEventListener('contactEnter', function(otherCollider){
+            // console.log('contactEnter', collider.object3d.name, 'with', otherCollider.object3d.name)
+            // })
+            var geometry = new THREE.BoxGeometry( .2, .2, .2 );
+            var material = new THREE.MeshPhongMaterial( { color: "red" } );
+            cube = new THREE.Mesh( geometry, material );
+            cube.name = 'bloco';
+            torus.add(cube);
+            //sceneGroupKanji.add(cube);
+            modelos();
+            cores();
+        }
+
+
+        function modelos(){
+
+            var material = new THREE.MeshPhongMaterial( { color: "white" } );
+            var material2 = new THREE.MeshPhongMaterial( { color: "white", wireframe:true } );
+            for(var i = 0; i < vetorGeometria.length; i++){
+                    objeto = new THREE.Mesh( vetorGeometria[i], material );
+                    objeto.name = vetorObjeto[i];
+                    objeto.position.z = i;
+                    collidableMeshList.push(objeto);
+                    marker5.add(objeto);
+                    objeto = new THREE.Mesh( vetorGeometria[i], material2 );
+                    objeto.name = vetorObjeto[i];
+                    objeto.position.z = i;
+                    collidableMeshList.push(objeto);
+                    marker5.add(objeto);
+                    // // init collider
+                    // var collider	= THREEx.Collider.createFromObject3d(objeto)
+                    // colliders.push(collider)
+                    // colliderSystem.add(collider)
+                    // onRenderFcts.push(function(delta){
+                    //     collider.update()
+	                // })
+                }
+        }
+        function cores(){
+                var geometry = new THREE.BoxGeometry( .2, .2, .2 );
+                for(var i = 0; i < vetorCores.length; i++){
+                    var material = new THREE.MeshPhongMaterial( { color: vetorCores[i]} );
+                    cube = new THREE.Mesh( geometry, material );
+                    cube.name = vetorCores[i];
+                    cube.position.z = i;
+                    collidableMeshList.push(cube);
+                    marker4.add(cube);
+                    //                     // // init collider
+                    // var collider	= THREEx.Collider.createFromObject3d(cube)
+                    // colliders.push(collider)
+                    // //colliderSystem.add(collider)
+                    // onRenderFcts.push(function(delta){
+                    //     collider.update()
+	                // })
+                }
+
+        }  
+        onRenderFcts.push(function(){
+		    renderer.render( scene, camera );		
+	    })
+        var lastTimeMsec= null
+	    requestAnimationFrame(function animate(nowMsec){
+            // keep looping
+            requestAnimationFrame( animate );
+            // measure time
+            lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
+            var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
+            lastTimeMsec	= nowMsec
+            // call each update function
+            onRenderFcts.forEach(function(onRenderFct){
+                onRenderFct(deltaMsec/1000, nowMsec/1000)
+            })
+	    })
+        onRenderFcts.push(function()
+        { 
+            var originPoint = torus.position.clone();       
+            //console.log(" Hit2 ");     
+            for (var vertexIndex = 0; vertexIndex < torus.geometry.vertices.length; vertexIndex++)
+            {		
+                var localVertex = torus.geometry.vertices[vertexIndex].clone();
+                var globalVertex = localVertex.applyMatrix4( torus.matrix );
+                var directionVector = globalVertex.sub( torus.position );
+                //console.log(" oi ");
+                var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
+                var collisionResults = ray.intersectObjects( collidableMeshList );
+                //console.log(collisionResults.length);
+                if(collisionResults.object != undefined){
+                    console.log("colisor: " + collisionResults.object);
+                }
+                //console.log("colisor: " + collisionResults.object);
+                if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
+                    console.log(" Hit ");
+                }
+            }	
+        })
+        onRenderFcts.push(function()
+        {
+            // update artoolkit on every frame
+            if ( arToolkitSource.ready !== false )
+                arToolkitContext.update( arToolkitSource.domElement );
+
+                if(marker1.visible){
+                    sceneGroupKanji.getObjectByName('arco').rotation.z -= .02;
+                }else if(marker2.visible){
+                    sceneGroupKanji.getObjectByName('arco').scale.x += .01;
+                    sceneGroupKanji.getObjectByName('arco').scale.y += .01;
+                    sceneGroupKanji.getObjectByName('arco').scale.z += .01;
+                }else if(marker3.visible){
+                    sceneGroupKanji.getObjectByName('arco').scale.x -= .01;
+                    sceneGroupKanji.getObjectByName('arco').scale.y -= .01;
+                    sceneGroupKanji.getObjectByName('arco').scale.z -= .01;
+                }else if(marker6.visible){
+                    sceneGroupKanji.getObjectByName('arco').rotation.z += .02;
+                }
+        })
+
+    </script>
+</body>
+</html>

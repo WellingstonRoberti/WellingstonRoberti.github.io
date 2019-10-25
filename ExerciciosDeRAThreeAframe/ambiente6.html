@@ -27,13 +27,14 @@
         var markerControlsHiro, markerControlsKanji, markerControlsA, markerControlsB, markerControlsC, markerControlsD, markerControlsG, markerControlsF, markerControls1, markerControls2, markerControls3, markerControls4, markerControls5, markerControls6;
 
         var vetorCores = ['red', 'green', 'yellow', 'orange', 'blue', 'purple'];
-        var vetorObjeto = ['cubo', 'esfera', 'cilindro', 'cone'];
-
+        var vetorObjeto = ['Cubo', 'Esfera', 'Cilindro', 'Cone', 'Dodecaedro', 'Icosaedro'];
         var vetorGeometria = [new THREE.BoxGeometry( .5, .5, .5 ), new THREE.SphereGeometry(.3, 32, 32 ), new THREE.CylinderGeometry( .3, .3, .8, radialSegments = 32 ), new THREE.ConeGeometry( .3, .4, 32 ), new THREE.DodecahedronGeometry( .3 ), new THREE.IcosahedronGeometry( .3 )];
+        var objetoColetado;
+        
         let sceneGroupKanji, sceneGroupHiro;
         var contador = 0, contadorAux = 0;
         var material = new THREE.MeshPhongMaterial( { color: "white" } );
-        var objeto, torus;
+        var objeto, torus, texto;
         var lastTimeMsec= null;
 
         initialize();
@@ -210,13 +211,13 @@
             scene.add( light );
 
             ////////////////////////////////////////////////////////////
-            // objetos do HIRO ( seletor de selação)
+            // objetos do HIRO (seletor)
             ////////////////////////////////////////////////////////////
-            var geometry = new THREE.TorusGeometry( .2, .01  , 16, 32 );
+            var geometry = new THREE.TorusGeometry( .4, .02  , 16, 32 );
             var material = new THREE.MeshPhongMaterial( { color: "lightgreen"} );
             torus = new THREE.Mesh( geometry, material );
             torus.position.y = .1;
-            torus.position.z = -4;
+            //torus.position.z = -4;
             torus.rotation.x = Math.PI/2;
             torus.name = 'seletor';
             sceneGroupHiro.add( torus );
@@ -228,15 +229,33 @@
             var geometry = new THREE.ConeGeometry(1, 2, 32);
             var material = new THREE.MeshPhongMaterial( { color: "lightgreen" } );
             cone = new THREE.Mesh( geometry, material );
-            cone.position.x -= 0.2;
-            cone.scale.set(.03,.03,.03);
+            cone.position.x = -0.4;
+            cone.scale.set(.04,.04,.04);
             torus.add(cone);
             var material = new THREE.MeshPhongMaterial( { color: "white" } );
             objeto = new THREE.Mesh( vetorGeometria[0], material );
             objeto.position.y = .5;
             marker5.add(objeto);
+            carregaTexto('Cubo')
+            
         }
+        function carregaTexto(palavra){
+            marker5.remove(texto)
+            var loader = new THREE.FontLoader();
 
+            loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
+
+                var geometry = new THREE.TextGeometry( palavra, {
+                    font: font,
+                    size: .1,
+                    height: .03                    
+                } ).center();
+                texto = new THREE.Mesh( geometry, material );
+                texto.position.y = 1;
+                marker5.add(texto);
+            } );
+
+        }
 
         ////////////////////////////////////////////////////////////
         // listeners
@@ -250,10 +269,12 @@
                     contador--;
                 }
                 objeto = new THREE.Mesh( vetorGeometria[contador], material );
+                carregaTexto(vetorObjeto[contador])
             }else if(ev.which == 3){
                 contador++;
                 contador = contador % vetorGeometria.length
                 objeto = new THREE.Mesh( vetorGeometria[contador], material );
+                carregaTexto(vetorObjeto[contador])
             }
             objeto.position.y = .5;
             marker5.add(objeto);
@@ -273,15 +294,15 @@
         
         document.addEventListener('keydown', function(ev) {
             if(ev.key =='q'){
-                if(sceneGroupHiro.getObjectByName('ObjetoColetado') == undefined){
+                if(objetoColetado == undefined){
                     alert('Nenhum objeto coletado!!')
                 }else{
                     contadorAux++;
                     contadorAux = contadorAux % vetorCores.length
-                    sceneGroupHiro.getObjectByName('ObjetoColetado').material.color.set(vetorCores[contadorAux])
+                    objetoColetado.material.color.set(vetorCores[contadorAux])
                 }
             }else if(ev.key == 'w'){
-                if(sceneGroupHiro.getObjectByName('ObjetoColetado') == undefined){
+                if(objetoColetado == undefined){
                     alert('Nenhum objeto coletado!!')
                 }else{
                    if(contadorAux == 0){
@@ -289,7 +310,7 @@
                     }else{
                         contadorAux--;
                     }
-                    sceneGroupHiro.getObjectByName('ObjetoColetado').material.color.set(vetorCores[contadorAux])
+                    objetoColetado.material.color.set(vetorCores[contadorAux])
                 }
             }
         }, false);
@@ -324,14 +345,28 @@
                     sceneGroupHiro.getObjectByName('seletor').scale.x -= .01;
                     sceneGroupHiro.getObjectByName('seletor').scale.y -= .01;
                     sceneGroupHiro.getObjectByName('seletor').scale.z -= .01;
-                }else if(markerKanji.visible){
+                }else if(marker1.visible && objetoColetado == undefined){
+                    objetoColetado = objeto.clone();
+                    objetoColetado.material = objeto.material.clone();
+                    torus.add(objetoColetado);
+                    objetoColetado.position.set(0,0,0)
+                    objetoColetado.rotation.set(-Math.PI/2,0,0);
+                }else if(marker1.visible && objetoColetado){
+                    torus.remove(objetoColetado);
+                    objetoColetado = objeto.clone();
+                    objetoColetado.material = objeto.material.clone();
+                    torus.add(objetoColetado);
+                    objetoColetado.position.set(0,0,0);
+                    objetoColetado.rotation.set(-Math.PI/2,0,0);
+                }else if(markerKanji){
+                    //sceneGroupHiro.getObjectByName('seletor').scale.set(1,1,1);
                     //tempo e soltar
                     // se o kanji esta sendo visto e não tem ngm no seletor comece a contagem e depois seleciona quem estiver a mostra
                     // se o kajji esta sendo visto e tem alguem no seletor, comece a contagem e solte o objeto na cena.
                     // 2 contagens para pegar e para soltar.
                     // se o kanji não esta sendo visto faça nada
                 }
-        })
+        });
 
     </script>
 </body>

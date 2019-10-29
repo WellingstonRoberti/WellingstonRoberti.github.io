@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Viewer</title>
+    <meta name="description" content="Viewer">
+    <script src="js/aframe.min.js"></script>
+    <script src="js/aframe-teleport-controls.min.js"></script>
+    <script src="js/tap-to-teleport.js" type="text/javascript"></script>
+</head>
+<body>
+<a-scene shadow="type: pcfsoft">
+    <a-assets>
+        <a-asset-item id="scene" src="GLTF/savedscene.gltf"></a-asset-item>
+    </a-assets>
+
+    <a-entity id="luz" light="type: point;
+                   castShadow: true;
+                   intensity: 1;"
+              rotation= "-45 0 0"
+              position="0 10 0">
+    </a-entity>
+
+    <a-gltf-model src="#scene"></a-gltf-model>
+
+    </a-entity>
+    <a-entity id="cameraRig" position="0 1.6 0" >
+        <a-entity id="head" position="0 0 0" camera="userHeight:1.6" look-controls="pointerLockEnabled:true">
+            <a-entity position="0.1 -0.1 0"
+                      touch-listener
+                      teleport-controls=
+                              "cameraRig: #cameraRig;
+             teleportOrigin: #head;
+             startEvents:starttouch;
+             endEvents:endtouch;
+             curveShootingSpeed:15;
+             hitCylinderRadius:1;
+             collisionEntities: [ground]"
+            >
+            </a-entity>
+        </a-entity>
+    </a-entity>
+    <a-entity ground
+              geometry="primitive:box; width:10000; depth:10000; height:0.01;"
+              material="color:#256b14"
+              position="0 0 -5"
+    ></a-entity>
+</a-scene>
+</body>
+</html>

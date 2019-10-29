@@ -36,6 +36,11 @@
         var material = new THREE.MeshPhongMaterial( { color: "white" } );
         var objeto, torus, texto;
         var lastTimeMsec= null;
+        
+        var vectorPosicao = new THREE.Vector3();
+        var holder = new THREE.Object3D()
+        var scenaParaSalvar = new THREE.Group();
+        scenaParaSalvar.add(holder)
 
         initialize();
 
@@ -217,7 +222,7 @@
             var material = new THREE.MeshPhongMaterial( { color: "lightgreen"} );
             torus = new THREE.Mesh( geometry, material );
             torus.position.y = .1;
-            //torus.position.z = -4;
+            torus.position.z = -4;
             torus.rotation.x = Math.PI/2;
             torus.name = 'seletor';
             sceneGroupHiro.add( torus );
@@ -235,12 +240,12 @@
             var material = new THREE.MeshPhongMaterial( { color: "white" } );
             objeto = new THREE.Mesh( vetorGeometria[0], material );
             objeto.position.y = .5;
-            marker5.add(objeto);
+            marker4.add(objeto);
             carregaTexto('Cubo')
             
         }
         function carregaTexto(palavra){
-            marker5.remove(texto)
+            marker4.remove(texto)
             var loader = new THREE.FontLoader();
 
             loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
@@ -252,7 +257,7 @@
                 } ).center();
                 texto = new THREE.Mesh( geometry, material );
                 texto.position.y = 1;
-                marker5.add(texto);
+                marker4.add(texto);
             } );
 
         }
@@ -261,7 +266,7 @@
         // listeners
         ////////////////////////////////////////////////////////////
         document.addEventListener('mousedown', function(ev) {
-            marker5.remove(objeto)
+            marker4.remove(objeto)
             if(ev.which == 1){
                 if(contador == 0){
                     contador = vetorGeometria.length-1;
@@ -277,7 +282,7 @@
                 carregaTexto(vetorObjeto[contador])
             }
             objeto.position.y = .5;
-            marker5.add(objeto);
+            marker4.add(objeto);
         }, false);
 
         document.addEventListener('wheel', function(ev) {
@@ -335,6 +340,35 @@
             })
 	    })
 
+        //////////////////////////////////////////
+        // DEFINIR AREA
+        //////////////////////////////////////////
+
+        onRenderFcts.push(function(){
+            if(markerA.visible){
+                    holder.position.set(2.5,0,1);
+                    markerA.add( scenaParaSalvar );
+                }else if(markerB.visible){
+                    holder.position.set(0,0,1);
+                    markerB.add( scenaParaSalvar);
+                }else if(markerC.visible){
+                    holder.position.set(-2.5,0,1);
+                    markerC.add( scenaParaSalvar );
+                }else if(markerD.visible){
+                    holder.position.set(2.5,0,-1);
+                    markerD.add( scenaParaSalvar );
+                }else if(markerF.visible){
+                    holder.position.set(-2.5,0,-1);
+                    markerF.add( scenaParaSalvar );
+                }else if(markerG.visible){
+                    holder.position.set(0,0,-1);
+                    markerG.add( scenaParaSalvar );
+                }else{
+                    markerA.remove(scenaParaSalvar);
+                }
+        })
+
+
         onRenderFcts.push(function()
         {
                 if(marker2.visible){
@@ -358,13 +392,27 @@
                     torus.add(objetoColetado);
                     objetoColetado.position.set(0,0,0);
                     objetoColetado.rotation.set(-Math.PI/2,0,0);
-                }else if(markerKanji){
-                    //sceneGroupHiro.getObjectByName('seletor').scale.set(1,1,1);
-                    //tempo e soltar
-                    // se o kanji esta sendo visto e não tem ngm no seletor comece a contagem e depois seleciona quem estiver a mostra
-                    // se o kajji esta sendo visto e tem alguem no seletor, comece a contagem e solte o objeto na cena.
-                    // 2 contagens para pegar e para soltar.
-                    // se o kanji não esta sendo visto faça nada
+                }else if(markerKanji.visible && objetoColetado != undefined){
+                    if(clock.running == false){
+                        clock.start()
+                    }
+                    //console.log(clock.getElapsedTime());
+                    if(clock.getElapsedTime()>5){
+                        //sceneGroupHiro.getObjectByName('seletor').scale.set(1,1,1);
+                        //console.log('antes de parar: ' + clock.getElapsedTime());
+                        objetoParaCena = objetoColetado.clone();
+                        objetoParaCena.material = objetoColetado.material.clone();
+                        markerHiro.getWorldPosition(vectorPosicao)
+                        //console.log(vectorPosicao)
+                        objetoParaCena.position.set(vectorPosicao.x,vectorPosicao.y, vectorPosicao.z+4)
+                        holder.add(objetoParaCena)
+                        //console.log('foi')
+                        clock.stop();
+                    }
+                }else if(!markerKanji.visible){
+                    clock.stop();
+                }else if(markerKanji.visible && objetoColetado == undefined){
+                    alert('Objeto não coletado!!')
                 }
         });
 

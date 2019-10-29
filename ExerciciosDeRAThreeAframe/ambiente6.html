@@ -257,6 +257,20 @@
 
         }
 
+        function saveScene(){
+            navigator.webkitPersistentStorage.requestQuota(1024*1024, function() {
+                window.webkitRequestFileSystem(window.PERSISTENT , 1024*1024, SaveDatFileBro);
+            });
+
+            var exporter = new THREE.GLTFExporter();
+
+            // Parse the input and generate the glTF output
+            exporter.parse( scene, function ( gltf ) {
+                console.log( gltf );
+                downloadJSON( gltf );
+            }, options );
+        }
+
         ////////////////////////////////////////////////////////////
         // listeners
         ////////////////////////////////////////////////////////////

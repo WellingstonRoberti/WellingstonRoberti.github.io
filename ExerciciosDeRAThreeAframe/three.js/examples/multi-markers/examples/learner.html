@@ -85,17 +85,15 @@
 	//		parse urlOptions
 	//////////////////////////////////////////////////////////////////////////////
 	
-	var hasHash = location.search.substring(1) !== '' ? true : false
-	if( hasHash === true ){
-		var urlOptions = JSON.parse(decodeURIComponent(location.search.substring(1)))
-	}else{
+
 		var urlOptions = {
-			backURL : null,
-			trackingBackend: 'artookit',
-			markerControlsParameters : [],
+			backURL : 'http://localhost:5500/ExerciciosDeRAThreeAframe/ambiente4Comlearner.html',
+			trackingBackend: 'artoolkit',
+			markerControlsParameters : [{"type":"pattern","patternUrl":"http://localhost:5500/ExerciciosDeRAThreeAframe/data/letterA.patt"},{"type":"pattern","patternUrl":"http://localhost:5500/ExerciciosDeRAThreeAframe/data/letterB.patt"},{"type":"pattern","patternUrl":"http://localhost:5500/ExerciciosDeRAThreeAframe/data/letterC.patt"},{"type":"pattern","patternUrl":"http://localhost:5500/ExerciciosDeRAThreeAframe/data/letterD.patt"},{"type":"pattern","patternUrl":"http://localhost:5500/ExerciciosDeRAThreeAframe/data/letterF.patt"},{"type":"pattern","patternUrl":"http://localhost:5500/ExerciciosDeRAThreeAframe/data/letterG.patt"}]
 		}
-		alert('no urlOption - should not happen')
-	}
+	
+		//alert('no urlOption - should not happen')
+	
 	
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -175,7 +173,7 @@
 
 	// prepare the parameters
 	var subMarkersControls = []
-	urlOptions.markersControlsParameters.forEach(function(markerControlsParameters){
+	urlOptions.markerControlsParameters.forEach(function(markerControlsParameters){
 		// create a markerRoot
 		var markerRoot = new THREE.Group()
 		scene.add(markerRoot)

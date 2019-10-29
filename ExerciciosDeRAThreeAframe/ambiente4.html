@@ -166,8 +166,9 @@
             markerControlsG = new THREEx.ArMarkerControls(arToolkitContext, markerG, {
                 type: 'pattern', patternUrl: "data/letterG.patt",
             })
-
-
+            var arquivo = 'ExerciciosDeRAThreeAframe/data/marker.dat'
+            var jsonString = arquivo.toJSON();
+            localStorage.setItem('ARjsMultiMarkerFile', jsonString);
             ////////////////////////////////////////////////////////////
             // setup scene
             ////////////////////////////////////////////////////////////

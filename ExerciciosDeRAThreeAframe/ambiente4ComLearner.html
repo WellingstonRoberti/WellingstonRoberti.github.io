@@ -50,18 +50,10 @@
 
         var arToolkitSource, arToolkitContext;
         var mixers = [];
-        var markerHiro, markerKanji, markerA, markerB, markerC, markerD, markerG, markerF;
-        var markerControlsHiro, markerControlsKanji, markerControlsA, markerControlsB, markerControlsC, markerControlsD, markerControlsG, markerControlsF, markerControls1, markerControls2, markerControls3;
-        var meshModel, meshLight;
-        let sceneGroupA = new THREE.Group();
-        let sceneGroupB = new THREE.Group();
-        let sceneGroupC = new THREE.Group();
-        let sceneGroupD = new THREE.Group();
-        let sceneGroupF = new THREE.Group();
-        let sceneGroupHiro = new THREE.Group();
-        let sceneGroupKanji = new THREE.Group();
+
+        var onRenderFcts= [];
+
         initialize();
-        animate();
         
         function initialize() {
             scene = new THREE.Scene();
@@ -129,72 +121,95 @@
             ////////////////////////////////////////////////////////////
 
             // build markerControls
-            markerHiro = new THREE.Group();
-            scene.add(markerHiro);
-            markerControlsHiro = new THREEx.ArMarkerControls(arToolkitContext, markerHiro, {
-                type: 'pattern', patternUrl: "data/hiro.patt",
-            })
+            // markerHiro = new THREE.Group();
+            // scene.add(markerHiro);
+            // markerControlsHiro = new THREEx.ArMarkerControls(arToolkitContext, markerHiro, {
+            //     type: 'pattern', patternUrl: "data/hiro.patt",
+            // })
 
-            markerKanji = new THREE.Group();
-            scene.add(markerKanji);
-            markerControlsKanji = new THREEx.ArMarkerControls(arToolkitContext, markerKanji, {
-                type: 'pattern', patternUrl: "data/kanji.patt",
-            })
+            // markerKanji = new THREE.Group();
+            // scene.add(markerKanji);
+            // markerControlsKanji = new THREEx.ArMarkerControls(arToolkitContext, markerKanji, {
+            //     type: 'pattern', patternUrl: "data/kanji.patt",
+            // })
 
-            marker1 = new THREE.Group();
-            scene.add(marker1);
-            markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, marker1, {
-                type: 'pattern', patternUrl: "data/1.patt",
-            })
+            // marker1 = new THREE.Group();
+            // scene.add(marker1);
+            // markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, marker1, {
+            //     type: 'pattern', patternUrl: "data/1.patt",
+            // })
 
-            marker2 = new THREE.Group();
-            scene.add(marker2);
-            markerControls2 = new THREEx.ArMarkerControls(arToolkitContext, marker2, {
-                type: 'pattern', patternUrl: "data/2.patt",
-            })
+            // marker2 = new THREE.Group();
+            // scene.add(marker2);
+            // markerControls2 = new THREEx.ArMarkerControls(arToolkitContext, marker2, {
+            //     type: 'pattern', patternUrl: "data/2.patt",
+            // })
 
-            marker3 = new THREE.Group();
-            scene.add(marker3);
-            markerControls3 = new THREEx.ArMarkerControls(arToolkitContext, marker3, {
-                type: 'pattern', patternUrl: "data/3.patt",
-            })
-            markerA = new THREE.Group();
-            scene.add(markerA);
-            markerControlsA = new THREEx.ArMarkerControls(arToolkitContext, markerA, {
-                type: 'pattern', patternUrl: "data/letterA.patt",
-            })
+            // marker3 = new THREE.Group();
+            // scene.add(marker3);
+            // markerControls3 = new THREEx.ArMarkerControls(arToolkitContext, marker3, {
+            //     type: 'pattern', patternUrl: "data/3.patt",
+            // })
+            // markerA = new THREE.Group();
+            // scene.add(markerA);
+            // markerControlsA = new THREEx.ArMarkerControls(arToolkitContext, markerA, {
+            //     type: 'pattern', patternUrl: "data/letterA.patt",
+            // })
 
-            markerB = new THREE.Group();
-            scene.add(markerB);
-            markerControlsB = new THREEx.ArMarkerControls(arToolkitContext, markerB, {
-                type: 'pattern', patternUrl: "data/letterB.patt",
-            })
+            // markerB = new THREE.Group();
+            // scene.add(markerB);
+            // markerControlsB = new THREEx.ArMarkerControls(arToolkitContext, markerB, {
+            //     type: 'pattern', patternUrl: "data/letterB.patt",
+            // })
 
-            markerC = new THREE.Group();
-            scene.add(markerC);
-            markerControlsC = new THREEx.ArMarkerControls(arToolkitContext, markerC, {
-                type: 'pattern', patternUrl: "data/letterC.patt",
-            })
+            // markerC = new THREE.Group();
+            // scene.add(markerC);
+            // markerControlsC = new THREEx.ArMarkerControls(arToolkitContext, markerC, {
+            //     type: 'pattern', patternUrl: "data/letterC.patt",
+            // })
 
-            markerD = new THREE.Group();
-            scene.add(markerD);
-            markerControlsD = new THREEx.ArMarkerControls(arToolkitContext, markerD, {
-                type: 'pattern', patternUrl: "data/letterD.patt",
-            })
+            // markerD = new THREE.Group();
+            // scene.add(markerD);
+            // markerControlsD = new THREEx.ArMarkerControls(arToolkitContext, markerD, {
+            //     type: 'pattern', patternUrl: "data/letterD.patt",
+            // })
 
-            markerF = new THREE.Group();
-            scene.add(markerF);
-            markerControlsF = new THREEx.ArMarkerControls(arToolkitContext, markerF, {
-                type: 'pattern', patternUrl: "data/letterF.patt",
-            })
+            // markerF = new THREE.Group();
+            // scene.add(markerF);
+            // markerControlsF = new THREEx.ArMarkerControls(arToolkitContext, markerF, {
+            //     type: 'pattern', patternUrl: "data/letterF.patt",
+            // })
 
-            markerG = new THREE.Group();
-            scene.add(markerG);
-            markerControlsG = new THREEx.ArMarkerControls(arToolkitContext, markerG, {
-                type: 'pattern', patternUrl: "data/letterG.patt",
-            })
+            // markerG = new THREE.Group();
+            // scene.add(markerG);
+            // markerControlsG = new THREEx.ArMarkerControls(arToolkitContext, markerG, {
+            //     type: 'pattern', patternUrl: "data/letterG.patt",
+            // })
 
+            // get multiMarkerFile from localStorage
+            console.assert( localStorage.getItem('ARjsMultiMarkerFile') !== null )
+            var multiMarkerFile = localStorage.getItem('ARjsMultiMarkerFile')
 
+            //////////////////////////////////////////////////////////////////////////////
+            //		Create ArMultiMarkerControls
+            //////////////////////////////////////////////////////////////////////////////
+            // build a markerRoot
+            var markerRoot = new THREE.Group()
+            scene.add(markerRoot)
+
+            // build a multiMarkerControls
+            var multiMarkerControls = THREEx.ArMultiMarkerControls.fromJSON(arToolkitContext, scene, markerRoot, multiMarkerFile)
+
+            // build a smoothedControls
+            var smoothedRoot = new THREE.Group()
+            scene.add(smoothedRoot)
+            var smoothedControls = new THREEx.ArSmoothedControls(smoothedRoot)
+            onRenderFcts.push(function(delta){
+                // update smoothedControls parameters depending on how many markers are visible in multiMarkerControls
+                multiMarkerControls.updateSmoothedControls(smoothedControls)
+                // update smoothedControls position
+                smoothedControls.update(markerRoot)
+            })	
             ////////////////////////////////////////////////////////////
             // setup scene
             ////////////////////////////////////////////////////////////
@@ -203,10 +218,14 @@
             light.position.set( 0,4,0 ); // default; light shining from top
             light.castShadow = true;
             camera.add( light );
-            markerHiro.add(sceneGroupHiro);
-            markerKanji.add(sceneGroupKanji);
+            
+            ;(function(){
+                var arWorldRoot = new THREE.Group()
+                var averageMatrix = THREEx.ArMultiMarkerControls.computeCenter(multiMarkerFile)
+                averageMatrix.decompose(arWorldRoot.position, arWorldRoot.quaternion, arWorldRoot.scale)
+                smoothedRoot.add(arWorldRoot)
 
-            var loader = new THREE.GLTF2Loader();
+                var loader = new THREE.GLTF2Loader();
             loader.load(
                 'GLTF/phoenix_bird.gltf',
                 ( gltf ) => {
@@ -219,513 +238,44 @@
                         mixer.clipAction(anim).play();
                     }
                     gltf.scene.scale.set(0.01, 0.01, 0.01);
-                    sceneGroupA.add( gltf.scene );
+                    arWorldRoot.add( gltf.scene );
                     mixers.push(mixer); 
                 }
-            );
+                );
+            })()
 
-            var loader = new THREE.GLTF2Loader();
-            loader.load(
-                'GLTF/r2d2.gltf',
-                ( gltf ) => {
-                    gltf.scene.name = 'r2d2';
-                    sceneGroupB.add( gltf.scene );
-                }
-            );
-
-            var loader = new THREE.GLTF2Loader();
-            loader.load(
-                'GLTF/caveira.gltf',
-                ( gltf ) => {
-                    gltf.scene.name = 'caveira';
-                    sceneGroupC.add( gltf.scene ); 
-                }
-            );
-            var loader = new THREE.GLTF2Loader();
-            loader.load(
-                'GLTF/yoda.gltf',
-                ( gltf ) => {
-                    gltf.scene.name = 'yoda';
-                    // called when the resource is loaded
-                    const mixer = new THREE.AnimationMixer(gltf.scene);
-                    //console.log(gltf.animations);
-                    // animations is a list of THREE.AnimationClip
-                    for (const anim of gltf.animations) {
-                        mixer.clipAction(anim).play();
-                    }
-                    sceneGroupD.add( gltf.scene );
-                    mixers.push(mixer); 
-                }
-            );
-
-            var loader = new THREE.GLTF2Loader();
-            loader.load(
-                'GLTF/phoenix.gltf',
-                ( gltf ) => {
-                    gltf.scene.name = 'phoenix';
-                    // called when the resource is loaded
-                    const mixer = new THREE.AnimationMixer(gltf.scene);
-                    //console.log(gltf.animations);
-                    // animations is a list of THREE.AnimationClip
-                    for (const anim of gltf.animations) {
-                        mixer.clipAction(anim).play();
-                    }
-                    sceneGroupF.add( gltf.scene );
-                    mixers.push(mixer); 
-                }
-            );
         }
-
-        function animate()
-        {
-            
-            requestAnimationFrame(animate);
-            var mixerUpdateDelta = clock.getDelta();
+        var lastTimeMsec= null
+	requestAnimationFrame(function animate(nowMsec){
+		// keep looping
+		requestAnimationFrame( animate );
+		// measure time
+		lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
+		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
+		lastTimeMsec	= nowMsec
+		// call each update function
+		onRenderFcts.forEach(function(onRenderFct){
+			onRenderFct(deltaMsec/1000, nowMsec/1000)
+        })
+        var mixerUpdateDelta = clock.getDelta();
 				// Update all the animation frames
 				for ( var i = 0; i < mixers.length; ++ i ) {
 					mixers[ i ].update( mixerUpdateDelta );
-				}
-            update();
-            render();
-        }
+		}
+	})
         function aprender(){
-                var learnerURL = THREEx.ArToolkitContext.baseURL + 'examples/multi-markers/examples/learner.html'
+                var learnerURL = 'http://localhost:5500/ExerciciosDeRAThreeAframe/three.js/examples/multi-markers/examples/learner.html'
                 THREEx.ArMultiMarkerUtils.navigateToLearnerPage(learnerURL, arToolkitContext.parameters.trackingBackend)
         }	        
-    
 
-        function update()
+        onRenderFcts.push(function()
         {
-            if(markerControlsKanji.object3d.visible){
-                
-                markerA.remove(sceneGroupB);
-                markerA.remove(sceneGroupC);
-                markerA.remove(sceneGroupD);
-                markerA.remove(sceneGroupF);
-                markerB.remove(sceneGroupB);
-                markerB.remove(sceneGroupC);
-                markerB.remove(sceneGroupD);
-                markerB.remove(sceneGroupF);
-                markerC.remove(sceneGroupB);
-                markerC.remove(sceneGroupC);
-                markerC.remove(sceneGroupD);
-                markerC.remove(sceneGroupF);
-                markerD.remove(sceneGroupB);
-                markerD.remove(sceneGroupC);
-                markerD.remove(sceneGroupD);
-                markerD.remove(sceneGroupF);
-                markerF.remove(sceneGroupB);
-                markerF.remove(sceneGroupC);
-                markerF.remove(sceneGroupD);
-                markerF.remove(sceneGroupF);
-                markerG.remove(sceneGroupB);
-                markerG.remove(sceneGroupC);
-                markerG.remove(sceneGroupD);
-                markerG.remove(sceneGroupF);
-
-                if(markerControlsA.object3d.visible){
-                    var obj = sceneGroupA.getObjectByName('bird').position.set(2.5,0,1);
-                    markerA.add( sceneGroupA );
-                }else if(markerControlsB.object3d.visible){
-                    var obj = sceneGroupA.getObjectByName('bird').position.set(0,0,1);
-                    markerB.add( sceneGroupA );
-                }else if(markerControlsC.object3d.visible){
-                    var obj = sceneGroupA.getObjectByName('bird').position.set(-2.5,0,1);
-                    markerC.add( sceneGroupA );
-                }else if(markerControlsD.object3d.visible){
-                    var obj = sceneGroupA.getObjectByName('bird').position.set(2.5,0,-1);
-                    markerD.add( sceneGroupA );
-                }else if(markerControlsF.object3d.visible){
-                    var obj = sceneGroupA.getObjectByName('bird').position.set(-2.5,0,-1);
-                    markerF.add( sceneGroupA );
-                }else if(markerControlsG.object3d.visible){
-                    var obj = sceneGroupA.getObjectByName('bird').position.set(0,0,-1);
-                    markerG.add( sceneGroupA );
-                }else{
-                    markerA.remove(sceneGroupA);
-                    markerA.remove(sceneGroupB);
-                    markerA.remove(sceneGroupC);
-                    markerA.remove(sceneGroupD);
-                    markerA.remove(sceneGroupF);
-                    markerB.remove(sceneGroupA);
-                    markerB.remove(sceneGroupB);
-                    markerB.remove(sceneGroupC);
-                    markerB.remove(sceneGroupD);
-                    markerB.remove(sceneGroupF);
-                    markerC.remove(sceneGroupA);
-                    markerC.remove(sceneGroupB);
-                    markerC.remove(sceneGroupC);
-                    markerC.remove(sceneGroupD);
-                    markerC.remove(sceneGroupF);
-                    markerD.remove(sceneGroupA);
-                    markerD.remove(sceneGroupB);
-                    markerD.remove(sceneGroupC);
-                    markerD.remove(sceneGroupD);
-                    markerD.remove(sceneGroupF);
-                    markerF.remove(sceneGroupA);
-                    markerF.remove(sceneGroupB);
-                    markerF.remove(sceneGroupC);
-                    markerF.remove(sceneGroupD);
-                    markerF.remove(sceneGroupF);
-                    markerG.remove(sceneGroupA);
-                    markerG.remove(sceneGroupB);
-                    markerG.remove(sceneGroupC);
-                    markerG.remove(sceneGroupD);
-                    markerG.remove(sceneGroupF);
-                }
-            }else if(markerControlsHiro.object3d.visible){
-                
-                markerA.remove(sceneGroupA);
-                markerA.remove(sceneGroupC);
-                markerA.remove(sceneGroupD);
-                markerA.remove(sceneGroupF);
-                markerB.remove(sceneGroupA);
-                markerB.remove(sceneGroupC);
-                markerB.remove(sceneGroupD);
-                markerB.remove(sceneGroupF);
-                markerC.remove(sceneGroupA);
-                markerC.remove(sceneGroupC);
-                markerC.remove(sceneGroupD);
-                markerC.remove(sceneGroupF);
-                markerD.remove(sceneGroupA);
-                markerD.remove(sceneGroupC);
-                markerD.remove(sceneGroupD);
-                markerD.remove(sceneGroupF);
-                markerF.remove(sceneGroupA);
-                markerF.remove(sceneGroupC);
-                markerF.remove(sceneGroupD);
-                markerF.remove(sceneGroupF);
-                markerG.remove(sceneGroupA);
-                markerG.remove(sceneGroupC);
-                markerG.remove(sceneGroupD);
-                markerG.remove(sceneGroupF);
-
-                if(markerControlsA.object3d.visible){
-                    sceneGroupB.getObjectByName('r2d2').position.set(2.5,0,1);
-                    markerA.add( sceneGroupB );
-                }else if(markerControlsB.object3d.visible){
-                    sceneGroupB.getObjectByName('r2d2').position.set(0,0,1);
-                    markerB.add( sceneGroupB);
-                }else if(markerControlsC.object3d.visible){
-                    sceneGroupB.getObjectByName('r2d2').position.set(-2.5,0,1);
-                    markerC.add( sceneGroupB );
-                }else if(markerControlsD.object3d.visible){
-                    sceneGroupB.getObjectByName('r2d2').position.set(2.5,0,-1);
-                    markerD.add( sceneGroupB );
-                }else if(markerControlsF.object3d.visible){
-                    sceneGroupB.getObjectByName('r2d2').position.set(-2.5,0,-1);
-                    markerF.add( sceneGroupB );
-                }else if(markerControlsG.object3d.visible){
-                    sceneGroupB.getObjectByName('r2d2').position.set(0,0,-1);
-                    markerG.add( sceneGroupB );
-                }else{
-                    markerA.remove(sceneGroupA);
-                    markerA.remove(sceneGroupB);
-                    markerA.remove(sceneGroupC);
-                    markerA.remove(sceneGroupD);
-                    markerA.remove(sceneGroupF);
-                    markerB.remove(sceneGroupA);
-                    markerB.remove(sceneGroupB);
-                    markerB.remove(sceneGroupC);
-                    markerB.remove(sceneGroupD);
-                    markerB.remove(sceneGroupF);
-                    markerC.remove(sceneGroupA);
-                    markerC.remove(sceneGroupB);
-                    markerC.remove(sceneGroupC);
-                    markerC.remove(sceneGroupD);
-                    markerC.remove(sceneGroupF);
-                    markerD.remove(sceneGroupA);
-                    markerD.remove(sceneGroupB);
-                    markerD.remove(sceneGroupC);
-                    markerD.remove(sceneGroupD);
-                    markerD.remove(sceneGroupF);
-                    markerF.remove(sceneGroupA);
-                    markerF.remove(sceneGroupB);
-                    markerF.remove(sceneGroupC);
-                    markerF.remove(sceneGroupD);
-                    markerF.remove(sceneGroupF);
-                    markerG.remove(sceneGroupA);
-                    markerG.remove(sceneGroupB);
-                    markerG.remove(sceneGroupC);
-                    markerG.remove(sceneGroupD);
-                    markerG.remove(sceneGroupF);
-                }
-            }else if(markerControls1.object3d.visible){
-                
-                markerA.remove(sceneGroupA);
-                markerA.remove(sceneGroupB);
-                markerA.remove(sceneGroupD);
-                markerA.remove(sceneGroupF);
-                markerB.remove(sceneGroupA);
-                markerB.remove(sceneGroupB);
-                markerB.remove(sceneGroupD);
-                markerB.remove(sceneGroupF);
-                markerC.remove(sceneGroupA);
-                markerC.remove(sceneGroupB);
-                markerC.remove(sceneGroupD);
-                markerC.remove(sceneGroupF);
-                markerD.remove(sceneGroupA);
-                markerD.remove(sceneGroupB);
-                markerD.remove(sceneGroupD);
-                markerD.remove(sceneGroupF);
-                markerF.remove(sceneGroupA);
-                markerF.remove(sceneGroupB);
-                markerF.remove(sceneGroupD);
-                markerF.remove(sceneGroupF);
-                markerG.remove(sceneGroupA);
-                markerG.remove(sceneGroupB);
-                markerG.remove(sceneGroupD);
-                markerG.remove(sceneGroupF);
-
-                if(markerControlsA.object3d.visible){
-                    sceneGroupC.getObjectByName('caveira').position.set(2.5,1,1);
-                    markerA.add( sceneGroupC );
-                }else if(markerControlsB.object3d.visible){
-                    sceneGroupC.getObjectByName('caveira').position.set(0,1,1);
-                    markerB.add( sceneGroupC );
-                }else if(markerControlsC.object3d.visible){
-                   sceneGroupC.getObjectByName('caveira').position.set(-2.5,1,1);
-                    markerC.add( sceneGroupC );
-                }else if(markerControlsD.object3d.visible){
-                    sceneGroupC.getObjectByName('caveira').position.set(2.5,1,-1);
-                    markerD.add( sceneGroupC );
-                }else if(markerControlsF.object3d.visible){
-                    sceneGroupC.getObjectByName('caveira').position.set(-2.5,1,-1);
-                    markerF.add( sceneGroupC );
-                }else if(markerControlsG.object3d.visible){
-                    sceneGroupC.getObjectByName('caveira').position.set(0,1,-1);
-                    markerG.add( sceneGroupC );
-                }else{
-                    markerA.remove(sceneGroupA);
-                    markerA.remove(sceneGroupB);
-                    markerA.remove(sceneGroupC);
-                    markerA.remove(sceneGroupD);
-                    markerA.remove(sceneGroupF);
-                    markerB.remove(sceneGroupA);
-                    markerB.remove(sceneGroupB);
-                    markerB.remove(sceneGroupC);
-                    markerB.remove(sceneGroupD);
-                    markerB.remove(sceneGroupF);
-                    markerC.remove(sceneGroupA);
-                    markerC.remove(sceneGroupB);
-                    markerC.remove(sceneGroupC);
-                    markerC.remove(sceneGroupD);
-                    markerC.remove(sceneGroupF);
-                    markerD.remove(sceneGroupA);
-                    markerD.remove(sceneGroupB);
-                    markerD.remove(sceneGroupC);
-                    markerD.remove(sceneGroupD);
-                    markerD.remove(sceneGroupF);
-                    markerF.remove(sceneGroupA);
-                    markerF.remove(sceneGroupB);
-                    markerF.remove(sceneGroupC);
-                    markerF.remove(sceneGroupD);
-                    markerF.remove(sceneGroupF);
-                    markerG.remove(sceneGroupA);
-                    markerG.remove(sceneGroupB);
-                    markerG.remove(sceneGroupC);
-                    markerG.remove(sceneGroupD);
-                    markerG.remove(sceneGroupF);
-                }
-            }else if(markerControls2.object3d.visible){
-                
-                markerA.remove(sceneGroupA);
-                markerA.remove(sceneGroupB);
-                markerA.remove(sceneGroupC);
-                markerA.remove(sceneGroupF);
-                markerB.remove(sceneGroupA);
-                markerB.remove(sceneGroupB);
-                markerB.remove(sceneGroupC);
-                markerB.remove(sceneGroupF);
-                markerC.remove(sceneGroupA);
-                markerC.remove(sceneGroupB);
-                markerC.remove(sceneGroupC);
-                markerC.remove(sceneGroupF);
-                markerD.remove(sceneGroupA);
-                markerD.remove(sceneGroupB);
-                markerD.remove(sceneGroupC);
-                markerD.remove(sceneGroupF);
-                markerF.remove(sceneGroupA);
-                markerF.remove(sceneGroupB);
-                markerF.remove(sceneGroupC);
-                markerF.remove(sceneGroupF);
-                markerG.remove(sceneGroupA);
-                markerG.remove(sceneGroupB);
-                markerG.remove(sceneGroupC);
-                markerG.remove(sceneGroupF);
-
-                if(markerControlsA.object3d.visible){
-                    sceneGroupD.getObjectByName('yoda').position.set(2.5,1,1);
-                    markerA.add( sceneGroupD );
-                }else if(markerControlsB.object3d.visible){
-                    sceneGroupD.getObjectByName('yoda').position.set(0,1,1);
-                    markerB.add( sceneGroupD );
-                }else if(markerControlsC.object3d.visible){
-                   sceneGroupD.getObjectByName('yoda').position.set(-2.5,1,1);
-                    markerC.add( sceneGroupD );
-                }else if(markerControlsD.object3d.visible){
-                    sceneGroupD.getObjectByName('yoda').position.set(2.5,1,-1);
-                    markerD.add( sceneGroupD );
-                }else if(markerControlsF.object3d.visible){
-                    sceneGroupD.getObjectByName('yoda').position.set(-2.5,1,-1);
-                    markerF.add( sceneGroupD );
-                }else if(markerControlsG.object3d.visible){
-                    sceneGroupD.getObjectByName('yoda').position.set(0,1,-1);
-                    markerG.add( sceneGroupD );
-                }else{
-                    markerA.remove(sceneGroupA);
-                    markerA.remove(sceneGroupB);
-                    markerA.remove(sceneGroupC);
-                    markerA.remove(sceneGroupD);
-                    markerA.remove(sceneGroupF);
-                    markerB.remove(sceneGroupA);
-                    markerB.remove(sceneGroupB);
-                    markerB.remove(sceneGroupC);
-                    markerB.remove(sceneGroupD);
-                    markerB.remove(sceneGroupF);
-                    markerC.remove(sceneGroupA);
-                    markerC.remove(sceneGroupB);
-                    markerC.remove(sceneGroupC);
-                    markerC.remove(sceneGroupD);
-                    markerC.remove(sceneGroupF);
-                    markerD.remove(sceneGroupA);
-                    markerD.remove(sceneGroupB);
-                    markerD.remove(sceneGroupC);
-                    markerD.remove(sceneGroupD);
-                    markerD.remove(sceneGroupF);
-                    markerF.remove(sceneGroupA);
-                    markerF.remove(sceneGroupB);
-                    markerF.remove(sceneGroupC);
-                    markerF.remove(sceneGroupD);
-                    markerF.remove(sceneGroupF);
-                    markerG.remove(sceneGroupA);
-                    markerG.remove(sceneGroupB);
-                    markerG.remove(sceneGroupC);
-                    markerG.remove(sceneGroupD);
-                    markerG.remove(sceneGroupF);
-                }
-            }else if(markerControls3.object3d.visible){
-                
-                markerA.remove(sceneGroupA);
-                markerA.remove(sceneGroupB);
-                markerA.remove(sceneGroupC);
-                markerA.remove(sceneGroupD);
-                markerB.remove(sceneGroupA);
-                markerB.remove(sceneGroupB);
-                markerB.remove(sceneGroupC);
-                markerB.remove(sceneGroupD);
-                markerC.remove(sceneGroupA);
-                markerC.remove(sceneGroupB);
-                markerC.remove(sceneGroupC);
-                markerC.remove(sceneGroupD);
-                markerD.remove(sceneGroupA);
-                markerD.remove(sceneGroupB);
-                markerD.remove(sceneGroupC);
-                markerD.remove(sceneGroupD);
-                markerF.remove(sceneGroupA);
-                markerF.remove(sceneGroupB);
-                markerF.remove(sceneGroupC);
-                markerF.remove(sceneGroupD);
-                markerG.remove(sceneGroupA);
-                markerG.remove(sceneGroupB);
-                markerG.remove(sceneGroupC);
-                markerG.remove(sceneGroupD);
-
-                if(markerControlsA.object3d.visible){
-                    sceneGroupF.getObjectByName('phoenix').position.set(2.5,0,1);
-                    markerA.add( sceneGroupF );
-                }else if(markerControlsB.object3d.visible){
-                    sceneGroupF.getObjectByName('phoenix').position.set(0,0,1);
-                    markerB.add( sceneGroupF );
-                }else if(markerControlsC.object3d.visible){
-                   sceneGroupF.getObjectByName('phoenix').position.set(-2.5,0,1);
-                    markerC.add( sceneGroupF );
-                }else if(markerControlsD.object3d.visible){
-                    sceneGroupF.getObjectByName('phoenix').position.set(2.5,0,-1);
-                    markerD.add( sceneGroupF );
-                }else if(markerControlsF.object3d.visible){
-                    sceneGroupF.getObjectByName('phoenix').position.set(-2.5,0,-1);
-                    markerF.add( sceneGroupF );
-                }else if(markerControlsG.object3d.visible){
-                    sceneGroupF.getObjectByName('phoenix').position.set(0,0,-1);
-                    markerG.add( sceneGroupF );
-                }else{
-                    markerA.remove(sceneGroupA);
-                    markerA.remove(sceneGroupB);
-                    markerA.remove(sceneGroupC);
-                    markerA.remove(sceneGroupD);
-                    markerA.remove(sceneGroupF);
-                    markerB.remove(sceneGroupA);
-                    markerB.remove(sceneGroupB);
-                    markerB.remove(sceneGroupC);
-                    markerB.remove(sceneGroupD);
-                    markerB.remove(sceneGroupF);
-                    markerC.remove(sceneGroupA);
-                    markerC.remove(sceneGroupB);
-                    markerC.remove(sceneGroupC);
-                    markerC.remove(sceneGroupD);
-                    markerC.remove(sceneGroupF);
-                    markerD.remove(sceneGroupA);
-                    markerD.remove(sceneGroupB);
-                    markerD.remove(sceneGroupC);
-                    markerD.remove(sceneGroupD);
-                    markerD.remove(sceneGroupF);
-                    markerF.remove(sceneGroupA);
-                    markerF.remove(sceneGroupB);
-                    markerF.remove(sceneGroupC);
-                    markerF.remove(sceneGroupD);
-                    markerF.remove(sceneGroupF);
-                    markerG.remove(sceneGroupA);
-                    markerG.remove(sceneGroupB);
-                    markerG.remove(sceneGroupC);
-                    markerG.remove(sceneGroupD);
-                    markerG.remove(sceneGroupF);
-                }
-            }else{
-                markerA.remove(sceneGroupA);
-                markerA.remove(sceneGroupB);
-                markerA.remove(sceneGroupC);
-                markerA.remove(sceneGroupD);
-                markerA.remove(sceneGroupF);
-                markerB.remove(sceneGroupA);
-                markerB.remove(sceneGroupB);
-                markerB.remove(sceneGroupC);
-                markerB.remove(sceneGroupD);
-                markerB.remove(sceneGroupF);
-                markerC.remove(sceneGroupA);
-                markerC.remove(sceneGroupB);
-                markerC.remove(sceneGroupC);
-                markerC.remove(sceneGroupD);
-                markerC.remove(sceneGroupF);
-                markerD.remove(sceneGroupA);
-                markerD.remove(sceneGroupB);
-                markerD.remove(sceneGroupC);
-                markerD.remove(sceneGroupD);
-                markerD.remove(sceneGroupF);
-                markerF.remove(sceneGroupA);
-                markerF.remove(sceneGroupB);
-                markerF.remove(sceneGroupC);
-                markerF.remove(sceneGroupD);
-                markerF.remove(sceneGroupF);
-                markerG.remove(sceneGroupA);
-                markerG.remove(sceneGroupB);
-                markerG.remove(sceneGroupC);
-                markerG.remove(sceneGroupD);
-                markerG.remove(sceneGroupF);
-            }
-
-
             
-
             // update artoolkit on every frame
             if ( arToolkitSource.ready !== false )
                 arToolkitContext.update( arToolkitSource.domElement );
-        }
-
-        function render()
-        {
             renderer.render( scene, camera );
-        }
+        })
     </script>
 </body>
 </html>

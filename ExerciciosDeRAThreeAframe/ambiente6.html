@@ -5,6 +5,7 @@
     <title>Exercício 6</title>
     <!-- include three.js library -->
     <script src='js/three.min.js'></script>
+    <script src='js/GLTFExporter.js'></script>
     <!-- include jsartookit -->
     <script src="jsartoolkit5/artoolkit.min.js"></script>
     <script src="jsartoolkit5/artoolkit.api.js"></script>
@@ -405,6 +406,27 @@
                     alert('Objeto não coletado!!')
                 }
         });
+        
+        function exportar(){
+            // Instantiate a exporter
+            var exporter = new THREE.GLTFExporter();
+
+            var options = {
+                trs: false,
+                onlyVisible: true,
+                truncateDrawRange: false,
+                binary: false,
+                forceIndices: false,
+                forcePowerOfTwoTextures: false,
+                maxTextureSize: Infinity // To prevent NaN value
+            };
+
+            // Parse the input and generate the glTF output
+            exporter.parse( scene, function ( gltf ) {
+                var output = JSON.stringify( gltf, null, 2 );
+                console.log( output );
+            }, options );
+        }
 
     </script>
 </body>

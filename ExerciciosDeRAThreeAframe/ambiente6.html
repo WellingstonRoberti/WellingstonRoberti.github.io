@@ -24,9 +24,14 @@
         }
     </style>
 <body>
+        <div>
         <div style='position: fixed; bottom: 16px; right: 16px; z-index:2';>
                 <img id='recordStartButton' src="imagens/record-start.png" width='128px'  height='64px' onclick='aprender()'>
-            </div>
+        </div>
+        <div style='position: fixed; bottom: 16px; right: 180px; z-index:2';>
+            <img id='exportButton' src="imagens/export.png" width='80px'  height='80px' onclick='exportar()'>
+        </div>
+        </div>
     <script>
         var scene, camera, renderer, clock, deltaTime, totalTime;
         var onRenderFcts= [];

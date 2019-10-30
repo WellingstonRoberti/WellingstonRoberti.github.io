@@ -52,7 +52,7 @@
         var objeto, torus, texto;
         var lastTimeMsec= null;
         
-        var vectorPosicao = new THREE.Vector3();
+        var vectorPosicao = new THREE.Vector3(), vectorScale = new THREE.Vector3(), vectorRotation = new THREE.Quaternion();;
         var holder = new THREE.Object3D()
         var scenaParaSalvar = new THREE.Group();
         scenaParaSalvar.add(holder)
@@ -388,9 +388,13 @@
                         //console.log('antes de parar: ' + clock.getElapsedTime());
                         objetoParaCena = objetoColetado.clone();
                         objetoParaCena.material = objetoColetado.material.clone();
-                        markerHiro.getWorldPosition(vectorPosicao)
+                        objetoColetado.getWorldPosition(vectorPosicao)
+                        objetoColetado.getWorldQuaternion(vectorRotation)
+                        objetoColetado.getWorldScale(vectorScale)
                         //console.log(vectorPosicao)
-                        objetoParaCena.position.set(vectorPosicao.x,vectorPosicao.y, vectorPosicao.z+4)
+                        objetoParaCena.position.set(vectorPosicao.x,vectorPosicao.y, vectorPosicao.z)
+                        objetoParaCena.rotation.set(vectorRotation.x,vectorRotation.y, vectorRotation.z)
+                        objetoParaCena.scale.set(vectorScale.x,vectorScale.y, vectorScale.z)
                         holder.add(objetoParaCena)
                         //console.log('foi')
                         clock.stop();

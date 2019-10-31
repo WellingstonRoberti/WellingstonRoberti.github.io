@@ -5,6 +5,7 @@
     <title>Exercício 6</title>
     <!-- include three.js library -->
     <script src='js/three.min.js'></script>
+    <script src='js/GLTFExporter.js'></script>
     <!-- include jsartookit -->
     <script src="jsartoolkit5/artoolkit.min.js"></script>
     <script src="jsartoolkit5/artoolkit.api.js"></script>
@@ -17,6 +18,8 @@
     <script src='three.js/src/markers-area/threex-armultimarkerutils.js'></script>
     <script src='three.js/src/markers-area/threex-armultimarkercontrols.js'></script>
     <script src='three.js/src/markers-area/threex-armultimarkerlearning.js'></script>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/blob-polyfill/3.0.20180112/Blob.min.js'></script>
 </head>
 <style>
         #recordButton:hover  {
@@ -24,10 +27,26 @@
         }
     </style>
 <body>
+    <div>
         <div style='position: fixed; bottom: 16px; right: 16px; z-index:2';>
                 <img id='recordStartButton' src="imagens/record-start.png" width='128px'  height='64px' onclick='aprender()'>
-            </div>
+        </div>
+        <div style='position: fixed; bottom: 16px; right: 180px; z-index:2';>
+            <img id='exportButton' src="imagens/export.png" width='80px'  height='80px' onclick='exportar()'>
+        </div>
+    </div>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-app.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-storage.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-analytics.js"></script>
+
     <script>
+        var file,  output;
+
         var scene, camera, renderer, clock, deltaTime, totalTime;
         var onRenderFcts= [];
 
@@ -400,6 +419,58 @@
                     alert('Objeto não coletado!!')
                 }
         });
+        
+        function exportar(){
+            // Instantiate a exporter
+            var exporter = new THREE.GLTFExporter();
+
+            var options = {
+                trs: false,
+                onlyVisible: true,
+                truncateDrawRange: false,
+                binary: false,
+                forceIndices: false,
+                forcePowerOfTwoTextures: false,
+                maxTextureSize: Infinity // To prevent NaN value
+            };
+
+            // Parse the input and generate the glTF output
+            exporter.parse( scene, function ( gltf ) {
+                output = JSON.stringify( gltf, null, 2 );
+                console.log( output );
+                grava();
+            }, options );
+
+        }
+
+        function grava() {
+            file = new Blob( [output], { type: "text/json" } );
+
+            // Your web app's Firebase configuration
+            var firebaseConfig = {
+                apiKey: "AIzaSyD8gmNDdRR4ljQ8CyFXpYT2fnHC5ktaIKo",
+                authDomain: "rvviewer.firebaseapp.com",
+                databaseURL: "https://rvviewer.firebaseio.com",
+                projectId: "rvviewer",
+                storageBucket: "rvviewer.appspot.com",
+                messagingSenderId: "585376937065",
+                appId: "1:585376937065:web:5083214174bfe70f8a5ef8",
+                measurementId: "G-N5572QF677"
+            };
+            // Initialize Firebase
+
+            firebase.initializeApp(firebaseConfig);
+
+            var storage = firebase.storage();
+            // Create a root reference
+            var storageRef = storage.ref();
+
+            var sceneRef = storageRef.child('scene.gltf');
+
+            sceneRef.put(file).then(function(snapshot) {
+                console.log('Uploaded a blob or file!');
+            });
+        }
 
     </script>
 </body>

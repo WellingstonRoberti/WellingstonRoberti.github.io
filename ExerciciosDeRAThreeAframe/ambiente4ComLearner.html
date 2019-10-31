@@ -49,6 +49,11 @@
         var scene, camera, renderer, clock, deltaTime, totalTime, arWorldRoot, gltf;
 
         var markerHiro, markerKanji, marker1, marker2, marker3;
+        let sceneGroupA = new THREE.Group();
+        let sceneGroupB = new THREE.Group();
+        let sceneGroupC = new THREE.Group();
+        let sceneGroupD = new THREE.Group();
+        let sceneGroupF = new THREE.Group();
 
         var arToolkitSource, arToolkitContext;
         var mixers = [];
@@ -190,87 +195,97 @@
             arWorldRoot = new THREE.Group()
             var averageMatrix = THREEx.ArMultiMarkerControls.computeCenter(multiMarkerFile)
             averageMatrix.decompose(arWorldRoot.position, arWorldRoot.quaternion, arWorldRoot.scale)
-            smoothedRoot.add(arWorldRoot)   
+            smoothedRoot.add(arWorldRoot) 
+
+
             var loader = new THREE.GLTF2Loader();
-                loader.load(
-                    'GLTF/phoenix_bird.gltf',
-                    ( gltf ) => {
-                        // called when the resource is loaded
-                        gltf.scene.name = 'bird';
-                        const mixer = new THREE.AnimationMixer(gltf.scene);
-                        //console.log(gltf.animations);
-                        // animations is a list of THREE.AnimationClip
-                        for (const anim of gltf.animations) {
-                            mixer.clipAction(anim).play();
-                        }
-                        gltf.scene.scale.set(0.01, 0.01, 0.01);
-                        this.gltf = gltf;
-                        mixers.push(mixer); 
+            loader.load(
+                'GLTF/phoenix_bird.gltf',
+                ( gltf ) => {
+                    // called when the resource is loaded
+                    gltf.scene.name = 'bird';
+                    const mixer = new THREE.AnimationMixer(gltf.scene);
+                    //console.log(gltf.animations);
+                    // animations is a list of THREE.AnimationClip
+                    for (const anim of gltf.animations) {
+                        mixer.clipAction(anim).play();
                     }
-                );           
+                    gltf.scene.scale.set(0.01, 0.01, 0.01);
+                    sceneGroupA.add( gltf.scene );
+                    mixers.push(mixer); 
+                }
+            );
+
+            var loader = new THREE.GLTF2Loader();
+            loader.load(
+                'GLTF/r2d2.gltf',
+                ( gltf ) => {
+                    gltf.scene.name = 'r2d2';
+                    sceneGroupB.add( gltf.scene );
+                }
+            );
+
+            var loader = new THREE.GLTF2Loader();
+            loader.load(
+                'GLTF/caveira.gltf',
+                ( gltf ) => {
+                    gltf.scene.name = 'caveira';
+                    sceneGroupC.add( gltf.scene ); 
+                }
+            );
+            var loader = new THREE.GLTF2Loader();
+            loader.load(
+                'GLTF/yoda.gltf',
+                ( gltf ) => {
+                    gltf.scene.name = 'yoda';
+                    // called when the resource is loaded
+                    const mixer = new THREE.AnimationMixer(gltf.scene);
+                    //console.log(gltf.animations);
+                    // animations is a list of THREE.AnimationClip
+                    for (const anim of gltf.animations) {
+                        mixer.clipAction(anim).play();
+                    }
+                    sceneGroupD.add( gltf.scene );
+                    mixers.push(mixer); 
+                }
+            );
+
+            var loader = new THREE.GLTF2Loader();
+            loader.load(
+                'GLTF/phoenix.gltf',
+                ( gltf ) => {
+                    gltf.scene.name = 'phoenix';
+                    // called when the resource is loaded
+                    const mixer = new THREE.AnimationMixer(gltf.scene);
+                    //console.log(gltf.animations);
+                    // animations is a list of THREE.AnimationClip
+                    for (const anim of gltf.animations) {
+                        mixer.clipAction(anim).play();
+                    }
+                    sceneGroupF.add( gltf.scene );
+                    mixers.push(mixer); 
+                }
+            );     
         }
 
         onRenderFcts.push(function(){
-            if(markerHiro.visible && gltf.scene.name != 'bird' ){
-                arWorldRoot.add( gltf.scene );
-
-            }else if(markerKanji.visible && gltf.scene.name != 'phoenix'){
-
-                var loader = new THREE.GLTF2Loader();
-                loader.load(
-                    'GLTF/phoenix.gltf',
-                    ( gltf ) => {
-                        gltf.scene.name = 'phoenix';
-                        // called when the resource is loaded
-                        const mixer = new THREE.AnimationMixer(gltf.scene);
-                        //console.log(gltf.animations);
-                        // animations is a list of THREE.AnimationClip
-                        for (const anim of gltf.animations) {
-                            mixer.clipAction(anim).play();
-                        }
-                        arWorldRoot.add( gltf.scene );
-                        mixers.push(mixer); 
-                    }
-                );
-            }else if(marker1.visible && gltf.scene.name != 'r2d2'){
-
-                var loader = new THREE.GLTF2Loader();
-                loader.load(
-                    'GLTF/r2d2.gltf',
-                    ( gltf ) => {
-                        gltf.scene.name = 'r2d2';
-                        arWorldRoot.add( gltf.scene );
-                    }
-                );
-            }else if(marker2.visible && gltf.scene.name != 'yoda'){
-
-                var loader = new THREE.GLTF2Loader();
-                loader.load(
-                    'GLTF/yoda.gltf',
-                    ( gltf ) => {
-                        gltf.scene.name = 'yoda';
-                        // called when the resource is loaded
-                        const mixer = new THREE.AnimationMixer(gltf.scene);
-                        //console.log(gltf.animations);
-                        // animations is a list of THREE.AnimationClip
-                        for (const anim of gltf.animations) {
-                            mixer.clipAction(anim).play();
-                        }
-                        arWorldRoot.add( gltf.scene );
-                        mixers.push(mixer); 
-                    }
-                );
-            }else if(marker3.visible && gltf.scene.name != 'caveira'){
-
-                var loader = new THREE.GLTF2Loader();
-                loader.load(
-                    'GLTF/caveira.gltf',
-                    ( gltf ) => {
-                        gltf.scene.name = 'caveira';
-                        arWorldRoot.add( gltf.scene ); 
-                    }
-                );
-            }
+            if(markerHiro.visible){
+                arWorldRoot.add(sceneGroupA)
+            }else if(markerKanji.visible){
+                arWorldRoot.add(sceneGroupB)
+            }else if(marker1.visible){
+                arWorldRoot.add(sceneGroupC)
+            }else if(marker2.visible){
+                arWorldRoot.add(sceneGroupD)
+            }else if(marker3.visible){
+                arWorldRoot.add(sceneGroupF)
+           }else{
+                arWorldRoot.remove(sceneGroupA)
+                arWorldRoot.remove(sceneGroupB)
+                arWorldRoot.remove(sceneGroupC)
+                arWorldRoot.remove(sceneGroupD)
+                arWorldRoot.remove(sceneGroupF)
+           }
         })
         var lastTimeMsec= null
 	    requestAnimationFrame(function animate(nowMsec){

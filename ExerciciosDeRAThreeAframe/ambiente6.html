@@ -15,10 +15,14 @@
     <script src="threex/threex-arbasecontrols.js"></script>
     <script src="threex/threex-armarkercontrols.js"></script>
     <script src='three.js/src/threex/threex-arsmoothedcontrols.js'></script>
+    <!-- include multimarker-->
     <script src='three.js/src/markers-area/threex-armultimarkerutils.js'></script>
     <script src='three.js/src/markers-area/threex-armultimarkercontrols.js'></script>
     <script src='three.js/src/markers-area/threex-armultimarkerlearning.js'></script>
-
+    <!-- include phisics-->
+    <script src='js/physi.js'></script>
+    <script src='js/physijs_worker.js'></script>
+    <!-- include firebase system-->
     <script src='https://cdnjs.cloudflare.com/ajax/libs/blob-polyfill/3.0.20180112/Blob.min.js'></script>
 </head>
 <style>
@@ -60,7 +64,8 @@
         var vetorGeometria = [new THREE.BoxGeometry( .5, .5, .5 ), new THREE.SphereGeometry(.3, 32, 32 ), new THREE.CylinderGeometry( .3, .3, .8, radialSegments = 32 ), new THREE.ConeGeometry( .3, .4, 32 ), new THREE.DodecahedronGeometry( .3 ), new THREE.IcosahedronGeometry( .3 )];
         var objetoColetado;
         
-        let  sceneGroupHiro;
+        let  sceneGroupHiro; 
+        var escalaReseta=0;
         var contador = 0, contadorAux = 0;
         var material = new THREE.MeshPhongMaterial( { color: "white" } );
         var objeto, torus, texto;
@@ -74,7 +79,14 @@
         initialize();
 
         function initialize() {
-            scene = new THREE.Scene();
+            scene = new Physijs.Scene({ fixedTimeStep: 1 / 120 });
+            scene.setGravity(new THREE.Vector3( 0, -30, 0 ));
+            scene.addEventListener(
+                'update',
+                function() {
+                    scene.simulate( undefined, 1 );
+                }
+            );
 
             camera = new THREE.Camera();
             scene.add(camera);
@@ -223,12 +235,22 @@
 
             sceneGroupHiro = new THREE.Group();
             markerHiro.add(sceneGroupHiro);
+
             ////////////////////////////////////////////////////////////
             // LUZ
             ////////////////////////////////////////////////////////////
-            let light = new THREE.PointLight(0xffffff);
-            light.position.set(0, 2, 0);
+            light = new THREE.DirectionalLight( 0xFFFFFF );
+            light.position.set( 20, 40, -15 );
+            light.target.position.copy( scene.position );
             light.castShadow = true;
+            light.shadow.camera.left = -60;
+            light.shadow.camera.top = -60;
+            light.shadow.camera.right = 60;
+            light.shadow.camera.bottom = 60;
+            light.shadow.camera.near = 20;
+            light.shadow.camera.far = 200;
+            light.shadow.bias = -.0001
+            light.shadow.mapSize.width = light.shadow.mapSize.height = 2048;
             scene.add( light );
 
             ////////////////////////////////////////////////////////////
@@ -268,6 +290,23 @@
             averageMatrix.decompose(arWorldRoot.position, arWorldRoot.quaternion, arWorldRoot.scale)
             smoothedRoot.add(arWorldRoot)
             arWorldRoot.add(scenaParaSalvar)
+
+            /////////////////////////////////////////////////////////////////////////
+            // Chão para sombra e colisões
+            /////////////////////////////////////////////////////////////////////////
+            ground_material = Physijs.createMaterial(
+			new THREE.ShadowMaterial(),
+                .8, // high friction
+                .4 // low restitution
+		    );
+            ground = new Physijs.BoxMesh(
+                new THREE.BoxGeometry(100, 1, 100),
+                ground_material,
+                0 // mass
+		    );
+            ground.receiveShadow = true;
+            arWorldRoot.add( ground );
+            scene.simulate();
         }
 
         function carregaTexto(palavra){
@@ -367,20 +406,22 @@
 	    })
 
         function aprender(){
-                var learnerURL = 'https://wellingstonroberti.github.io/ExerciciosDeRAThreeAframe/three.js/examples/multi-markers/examples/learnerAmbiente6.html'
+                var learnerURL = 'http://127.0.0.1:5500/ExerciciosDeRAThreeAframe/three.js/examples/multi-markers/examples/learnerAmbiente6.html'
                 THREEx.ArMultiMarkerUtils.navigateToLearnerPage(learnerURL, arToolkitContext.parameters.trackingBackend)
         }
 
         onRenderFcts.push(function()
         {
-                if(marker2.visible){
-                    sceneGroupHiro.getObjectByName('seletor').scale.x += .01;
-                    sceneGroupHiro.getObjectByName('seletor').scale.y += .01;
-                    sceneGroupHiro.getObjectByName('seletor').scale.z += .01;
+            if(marker2.visible){
+                    torus.scale.x += .01;
+                    torus.scale.y += .01;
+                    torus.scale.z += .01;
+                    escalaReseta += .01;
                 }else if(marker3.visible){
-                    sceneGroupHiro.getObjectByName('seletor').scale.x -= .01;
-                    sceneGroupHiro.getObjectByName('seletor').scale.y -= .01;
-                    sceneGroupHiro.getObjectByName('seletor').scale.z -= .01;
+                    torus.scale.x -= .01;
+                    torus.scale.y -= .01;
+                    torus.scale.z -= .01;
+                    escalaReseta -= .01;
                 }else if(marker1.visible && objetoColetado == undefined){
                     objetoColetado = objeto.clone();
                     objetoColetado.material = objeto.material.clone();
@@ -394,13 +435,34 @@
                     torus.add(objetoColetado);
                     objetoColetado.position.set(0,0,0);
                     objetoColetado.rotation.set(-Math.PI/2,0,0);
+                    if(escalaReseta > 0){
+                        torus.scale.x -= escalaReseta;
+                        torus.scale.y -= escalaReseta;
+                        torus.scale.z -= escalaReseta;
+                        escalaReseta =0;                     
+                    }else if(escalaReseta < 0){
+                        torus.scale.x += -escalaReseta;
+                        torus.scale.y += -escalaReseta;
+                        torus.scale.z += -escalaReseta;   
+                        escalaReseta =0;                     
+                    }
                 }else if(markerKanji.visible && objetoColetado != undefined){
                     if(clock.running == false){
                         clock.start()
                     }
                     if(clock.getElapsedTime()>5){
-                        objetoParaCena = objetoColetado.clone();
-                        objetoParaCena.material = objetoColetado.material.clone();
+                        //var objetoParaCena;
+                        //if(vetorObjeto[contador] == 'cubo'){
+                           var objetoParaCena = new Physijs.BoxMesh(
+                                objetoColetado.geometry,
+                                objetoColetado.material, 10
+					        );
+                        // }else if(vetorObjeto[contador] == 'Esfera'){
+                        //     objetoParaCena = new Physijs.SphereMesh(
+                        //         objetoColetado.geometry,
+                        //         objetoColetado.material
+					    //     );
+                        // }
                         objetoColetado.getWorldPosition(vectorPosicao)
                         objetoColetado.getWorldQuaternion(vectorRotation)
                         objetoColetado.getWorldScale(vectorScale)
@@ -408,7 +470,6 @@
                         objetoParaCena.setRotationFromQuaternion(vectorRotation)
                         objetoParaCena.scale.set(vectorScale.x,vectorScale.y, vectorScale.z)
                         holder.add(objetoParaCena)
-                        sceneGroupHiro.getObjectByName('seletor').scale.set(1,1,1);
                         clock.stop();
                     }
                 }else if(!markerKanji.visible){

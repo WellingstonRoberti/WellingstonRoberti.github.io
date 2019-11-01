@@ -78,7 +78,7 @@
 
             camera = new THREE.Camera();
             scene.add(camera);
-
+     
             renderer = new THREE.WebGLRenderer({
                 antialias : true,
                 alpha: true
@@ -258,16 +258,18 @@
             objeto.position.y = .5;
             marker4.add(objeto);
             carregaTexto('Cubo')
-            
 
-            ;(function(){
-                var arWorldRoot = new THREE.Group()
-                var averageMatrix = THREEx.ArMultiMarkerControls.computeCenter(multiMarkerFile)
-                averageMatrix.decompose(arWorldRoot.position, arWorldRoot.quaternion, arWorldRoot.scale)
-                smoothedRoot.add(arWorldRoot)
-                arWorldRoot.add(scenaParaSalvar)
-            })()
+            /////////////////////////////////////////////////////////////////////////
+            // Seta os grupos com a área dos marcadores e computa o centro da área
+            /////////////////////////////////////////////////////////////////////////
+
+            var arWorldRoot = new THREE.Group()
+            var averageMatrix = THREEx.ArMultiMarkerControls.computeCenter(multiMarkerFile)
+            averageMatrix.decompose(arWorldRoot.position, arWorldRoot.quaternion, arWorldRoot.scale)
+            smoothedRoot.add(arWorldRoot)
+            arWorldRoot.add(scenaParaSalvar)
         }
+
         function carregaTexto(palavra){
             marker4.remove(texto)
             var loader = new THREE.FontLoader();
@@ -396,21 +398,17 @@
                     if(clock.running == false){
                         clock.start()
                     }
-                    //console.log(clock.getElapsedTime());
                     if(clock.getElapsedTime()>5){
-                        //sceneGroupHiro.getObjectByName('seletor').scale.set(1,1,1);
-                        //console.log('antes de parar: ' + clock.getElapsedTime());
                         objetoParaCena = objetoColetado.clone();
                         objetoParaCena.material = objetoColetado.material.clone();
                         objetoColetado.getWorldPosition(vectorPosicao)
                         objetoColetado.getWorldQuaternion(vectorRotation)
                         objetoColetado.getWorldScale(vectorScale)
-                        //console.log(vectorPosicao)
                         objetoParaCena.position.set(vectorPosicao.x,vectorPosicao.y, vectorPosicao.z)
-                        objetoParaCena.rotation.set(vectorRotation.x,vectorRotation.y, vectorRotation.z)
+                        objetoParaCena.setRotationFromQuaternion(vectorRotation)
                         objetoParaCena.scale.set(vectorScale.x,vectorScale.y, vectorScale.z)
                         holder.add(objetoParaCena)
-                        //console.log('foi')
+                        sceneGroupHiro.getObjectByName('seletor').scale.set(1,1,1);
                         clock.stop();
                     }
                 }else if(!markerKanji.visible){

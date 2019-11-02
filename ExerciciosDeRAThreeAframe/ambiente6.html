@@ -95,11 +95,11 @@
                 antialias : true,
                 alpha: true
             });
-            renderer.setClearColor(new THREE.Color('lightgrey'), 0)
+            renderer.setClearColor(new THREE.Color('lightgrey'), 0);
             renderer.setSize( window.innerWidth, window.innerHeight);
-            renderer.domElement.style.position = 'absolute'
-            renderer.domElement.style.top = '0px'
-            renderer.domElement.style.left = '0px'
+            renderer.domElement.style.position = 'absolute';
+            renderer.domElement.style.top = '0px';
+            renderer.domElement.style.left = '0px';
             document.body.appendChild( renderer.domElement );
 
             clock = new THREE.Clock();
@@ -116,8 +116,8 @@
 
             function onResize()
             {
-                arToolkitSource.onResize()
-                arToolkitSource.copySizeTo(renderer.domElement)
+                arToolkitSource.onResize();
+                arToolkitSource.copySizeTo(renderer.domElement);
                 if ( arToolkitContext.arController !== null )
                 {
                     arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)
@@ -157,74 +157,74 @@
             scene.add(markerHiro);
             markerControlsHiro = new THREEx.ArMarkerControls(arToolkitContext, markerHiro, {
                 type: 'pattern', patternUrl: "data/hiro.patt",
-            })
+            });
 
             markerKanji = new THREE.Group();
             scene.add(markerKanji);
             markerControlsKanji = new THREEx.ArMarkerControls(arToolkitContext, markerKanji, {
                 type: 'pattern', patternUrl: "data/kanji.patt",
-            })
+            });
 
             marker1 = new THREE.Group();
             scene.add(marker1);
             markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, marker1, {
                 type: 'pattern', patternUrl: "data/1.patt",
-            })
+            });
 
             marker2 = new THREE.Group();
             scene.add(marker2);
             markerControls2 = new THREEx.ArMarkerControls(arToolkitContext, marker2, {
                 type: 'pattern', patternUrl: "data/2.patt",
-            })
+            });
 
             marker3 = new THREE.Group();
             scene.add(marker3);
             markerControls3 = new THREEx.ArMarkerControls(arToolkitContext, marker3, {
                 type: 'pattern', patternUrl: "data/3.patt",
-            })
+            });
 
             marker4 = new THREE.Group();
             scene.add(marker4);
             markerControls4 = new THREEx.ArMarkerControls(arToolkitContext, marker4, {
                 type: 'pattern', patternUrl: "data/4.patt",
-            })
+            });
 
             marker5 = new THREE.Group();
             scene.add(marker5);
             markerControls5 = new THREEx.ArMarkerControls(arToolkitContext, marker5, {
                 type: 'pattern', patternUrl: "data/5.patt",
-            })
+            });
 
             marker6 = new THREE.Group();
             scene.add(marker6);
             markerControls6 = new THREEx.ArMarkerControls(arToolkitContext, marker6, {
                 type: 'pattern', patternUrl: "data/6.patt",
-            })
+            });
 
             // get multiMarkerFile from localStorage
-            console.assert( localStorage.getItem('ARjsMultiMarkerFile') !== null )
-            var multiMarkerFile = localStorage.getItem('ARjsMultiMarkerFile')
+            console.assert( localStorage.getItem('ARjsMultiMarkerFile') !== null );
+            var multiMarkerFile = localStorage.getItem('ARjsMultiMarkerFile');
 
             //////////////////////////////////////////////////////////////////////////////
             //		Create ArMultiMarkerControls
             //////////////////////////////////////////////////////////////////////////////
             // build a markerRoot
-            var markerRoot = new THREE.Group()
-            scene.add(markerRoot)
+            var markerRoot = new THREE.Group();
+            scene.add(markerRoot);
 
             // build a multiMarkerControls
-            var multiMarkerControls = THREEx.ArMultiMarkerControls.fromJSON(arToolkitContext, scene, markerRoot, multiMarkerFile)
+            var multiMarkerControls = THREEx.ArMultiMarkerControls.fromJSON(arToolkitContext, scene, markerRoot, multiMarkerFile);
 
             // build a smoothedControls
-            var smoothedRoot = new THREE.Group()
-            scene.add(smoothedRoot)
-            var smoothedControls = new THREEx.ArSmoothedControls(smoothedRoot)
+            var smoothedRoot = new THREE.Group();
+            scene.add(smoothedRoot);
+            var smoothedControls = new THREEx.ArSmoothedControls(smoothedRoot);
             onRenderFcts.push(function(delta){
                 // update smoothedControls parameters depending on how many markers are visible in multiMarkerControls
-                multiMarkerControls.updateSmoothedControls(smoothedControls)
+                multiMarkerControls.updateSmoothedControls(smoothedControls);
                 // update smoothedControls position
                 smoothedControls.update(markerRoot)
-            })	
+            });
 
             ////////////////////////////////////////////////////////////
             // setup scene
@@ -285,11 +285,11 @@
             // Seta os grupos com a área dos marcadores e computa o centro da área
             /////////////////////////////////////////////////////////////////////////
 
-            var arWorldRoot = new THREE.Group()
-            var averageMatrix = THREEx.ArMultiMarkerControls.computeCenter(multiMarkerFile)
-            averageMatrix.decompose(arWorldRoot.position, arWorldRoot.quaternion, arWorldRoot.scale)
-            smoothedRoot.add(arWorldRoot)
-            arWorldRoot.add(scenaParaSalvar)
+            var arWorldRoot = new THREE.Group();
+            var averageMatrix = THREEx.ArMultiMarkerControls.computeCenter(multiMarkerFile);
+            averageMatrix.decompose(arWorldRoot.position, arWorldRoot.quaternion, arWorldRoot.scale);
+            smoothedRoot.add(arWorldRoot);
+            arWorldRoot.add(scenaParaSalvar);
 
             /////////////////////////////////////////////////////////////////////////
             // Chão para sombra e colisões
@@ -310,7 +310,7 @@
         }
 
         function carregaTexto(palavra){
-            marker4.remove(texto)
+            marker4.remove(texto);
             var loader = new THREE.FontLoader();
 
             loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
@@ -324,7 +324,6 @@
                 texto.position.y = 1;
                 marker4.add(texto);
             } );
-
         }
 
         ////////////////////////////////////////////////////////////
@@ -480,6 +479,8 @@
         });
         
         function exportar(){
+
+
             // Instantiate a exporter
             var exporter = new THREE.GLTFExporter();
 

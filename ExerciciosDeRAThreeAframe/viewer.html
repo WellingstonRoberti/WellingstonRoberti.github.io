@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Execício 2</title>
-    <meta name="description" content="Execício 2">
+    <title>Viewer</title>
+    <meta name="description" content="Viewer">
     <script src="js/aframe.min.js"></script>
     <script src="js/aframe-teleport-controls.min.js"></script>
     <script src="js/aframe-environment-component.min.js"></script>
@@ -29,11 +29,11 @@
     // Create a root reference
     var storageRef = storage.ref();
 
-    var sceneRef = storageRef.child('scene.gltf');
+    var sceneRef = storageRef.child('newscene.gltf');
 
     sceneRef.getDownloadURL().then(function(url) {
         console.log(url);
-        document.getElementById("cena").setAttribute("src", url);
+        document.querySelector('a-gltf-model').setAttribute('src', url);
     });
 
 </script>

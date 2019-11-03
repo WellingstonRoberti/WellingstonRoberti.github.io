@@ -20,8 +20,8 @@
     <script src='three.js/src/markers-area/threex-armultimarkercontrols.js'></script>
     <script src='three.js/src/markers-area/threex-armultimarkerlearning.js'></script>
     <!-- include phisics-->
-    <script src='js/physi.js'></script>
-    <script src='js/physijs_worker.js'></script>
+    <script src='js/cannon.js'></script>
+
     <!-- include firebase system-->
     <script src='https://cdnjs.cloudflare.com/ajax/libs/blob-polyfill/3.0.20180112/Blob.min.js'></script>
 </head>
@@ -70,6 +70,9 @@
         var material = new THREE.MeshPhongMaterial( { color: "white" } );
         var objeto, torus, texto;
         var lastTimeMsec= null;
+        var lastTime;
+        var fixedTimeStep = 1.0 / 60.0; // seconds
+        var maxSubSteps = 3;    
         
         var vectorPosicao = new THREE.Vector3(), vectorScale = new THREE.Vector3(), vectorRotation = new THREE.Quaternion();;
         var holder = new THREE.Object3D()
@@ -79,15 +82,8 @@
         initialize();
 
         function initialize() {
-            scene = new Physijs.Scene({ fixedTimeStep: 1 / 120 });
-            scene.setGravity(new THREE.Vector3( 0, -30, 0 ));
-            scene.addEventListener(
-                'update',
-                function() {
-                    scene.simulate( undefined, 1 );
-                }
-            );
-
+            scene = new THREE.Scene();
+            
             camera = new THREE.Camera();
             scene.add(camera);
      
@@ -260,7 +256,7 @@
             var material = new THREE.MeshPhongMaterial( { color: "lightgreen"} );
             torus = new THREE.Mesh( geometry, material );
             torus.position.y = .1;
-            torus.position.z = -4;
+            torus.position.z = -2;
             torus.rotation.x = Math.PI/2;
             torus.name = 'seletor';
             sceneGroupHiro.add( torus );
@@ -294,21 +290,40 @@
             /////////////////////////////////////////////////////////////////////////
             // Chão para sombra e colisões
             /////////////////////////////////////////////////////////////////////////
-            ground_material = Physijs.createMaterial(
-			new THREE.ShadowMaterial(),
-                .8, // high friction
-                .4 // low restitution
-		    );
-            ground = new Physijs.BoxMesh(
-                new THREE.BoxGeometry(100, 1, 100),
-                ground_material,
-                0 // mass
-		    );
-            ground.receiveShadow = true;
-            arWorldRoot.add( ground );
-            scene.simulate();
+            var geometry = new THREE.PlaneGeometry( 10, 5  );
+            var material = new THREE.MeshBasicMaterial( {color: 'grey'} );
+            this.plane = new THREE.Mesh( geometry, material );
+            this.plane.receiveShadow = true;
+            this.plane.rotation.x = -Math.PI/2;
+            this.plane.position.y = .1;
+            arWorldRoot.add( plane );
+            setupPhisics();
         }
 
+
+        function setupPhisics(){
+            this.world = new CANNON.World();
+            this.world.gravity.set(0,-9,0);
+            this.world.broadphase = new CANNON.NaiveBroadphase();            
+            // Create a plane
+            this.groundBody = new CANNON.Body({
+                mass: 0 // mass == 0 makes the body static
+            });
+            this.groundShape = new CANNON.Box(new CANNON.Vec3(10,.01,5));
+            groundBody.addShape(groundShape);
+            
+            this.world.addBody(groundBody);
+        }
+        function fiscaDoObjetoDaCena(){
+            // Create a sphere
+            var radius = 1; // m
+            this.sphereBody = new CANNON.Body({
+            mass: 5, // kg
+            position: new CANNON.Vec3(0, 10, 0), // m
+            shape: new CANNON.Sphere(radius)
+            });
+            this.world.addBody(this.sphereBody);
+        }
         function carregaTexto(palavra){
             marker4.remove(texto)
             var loader = new THREE.FontLoader();
@@ -395,6 +410,18 @@
 	    requestAnimationFrame(function animate(nowMsec){
             // keep looping
             requestAnimationFrame( animate );
+            this.time += 0.05;
+            if(lastTime !== undefined){
+                var dt = (this.time - lastTime) / 1000;
+                this.world.step(fixedTimeStep);
+            }
+            //console.log("Sphere y position: " + this.sphereBody.position.y);
+            teste = new THREE.Vector3();
+            this.plane.getWorldPosition(teste)
+            //console.log("Plane position: " + teste.x);
+            this.groundBody.position = teste;
+
+            lastTime = this.time;
             // measure time
             lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
             var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
@@ -451,18 +478,7 @@
                         clock.start()
                     }
                     if(clock.getElapsedTime()>5){
-                        //var objetoParaCena;
-                        //if(vetorObjeto[contador] == 'cubo'){
-                           var objetoParaCena = new Physijs.BoxMesh(
-                                objetoColetado.geometry,
-                                objetoColetado.material, 10
-					        );
-                        // }else if(vetorObjeto[contador] == 'Esfera'){
-                        //     objetoParaCena = new Physijs.SphereMesh(
-                        //         objetoColetado.geometry,
-                        //         objetoColetado.material
-					    //     );
-                        // }
+
                         objetoColetado.getWorldPosition(vectorPosicao)
                         objetoColetado.getWorldQuaternion(vectorRotation)
                         objetoColetado.getWorldScale(vectorScale)

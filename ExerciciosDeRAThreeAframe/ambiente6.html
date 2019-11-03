@@ -257,7 +257,7 @@
             // objetos do HIRO (seletor)
             ////////////////////////////////////////////////////////////
             var geometry = new THREE.TorusGeometry( .4, .02  , 16, 32 );
-            var material = new THREE.THREE.MeshBasicMaterial( { color: "lightgreen"} );
+            var material = new THREE.MeshBasicMaterial( { color: "lightgreen"} );
             torus = new THREE.Mesh( geometry, material );
             torus.position.y = .1;
             torus.position.z = -4;
@@ -275,7 +275,7 @@
             cone.position.x = -0.4;
             cone.scale.set(.04,.04,.04);
             torus.add(cone);
-            var material = new THREE.THREE.MeshBasicMaterial( { color: "white" } );
+            var material = new THREE.MeshBasicMaterial( { color: "white" } );
             objeto = new THREE.Mesh( vetorGeometria[0], material );
             objeto.position.y = .5;
             marker4.add(objeto);

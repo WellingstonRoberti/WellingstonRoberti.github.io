@@ -1269,7 +1269,7 @@ THREE.GLTFExporter.prototype = {
 
             }
 
-            if ( originalNormal !== undefined ) geometry.setAttribute( 'normal', originalNormal );
+            if ( originalNormal !== undefined ){geometry.setAttribute( 'normal', originalNormal );}
 
             // Skip if no exportable attributes found
             if ( Object.keys( attributes ).length === 0 ) {

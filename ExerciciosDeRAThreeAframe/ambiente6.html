@@ -280,17 +280,19 @@
             /////////////////////////////////////////////////////////////////////////
             // Chão para sombra e colisões
             /////////////////////////////////////////////////////////////////////////
-            var geometry = new THREE.PlaneGeometry( 200, 200  );
-            var material = new THREE.MeshPhongMaterial( {color: 'grey', wireframe:true} );
+            var geometry = new THREE.PlaneGeometry( 10, 5, 10,5  );
+            var material = new THREE.MeshPhongMaterial( {color: 'red', wireframe:true} );
             this.plane = new THREE.Mesh( geometry, material );
             this.plane.receiveShadow = true;
             this.plane.rotation.x = -Math.PI/2;
-            this.plane.position.y = .1;
+            //this.plane.position.y = .1;
             this.arWorldRoot.add( plane );
 
             setupPhisics();
         }
-
+        onRenderFcts.push(function(){
+            console.log(this.arWorldRoot.position.distanceTo(markerHiro.position))
+        })
 
         function setupPhisics(){ 
             this.world = new CANNON.World();

@@ -20,7 +20,7 @@
     <script src='three.js/src/markers-area/threex-armultimarkercontrols.js'></script>
     <script src='three.js/src/markers-area/threex-armultimarkerlearning.js'></script>
     <!-- include phisics-->
-    <script src='js/cannon.js'></script>
+    <script src='js/Cannon.js'></script>
 
     <!-- include firebase system-->
     <script src='https://cdnjs.cloudflare.com/ajax/libs/blob-polyfill/3.0.20180112/Blob.min.js'></script>
@@ -30,6 +30,7 @@
             cursor: pointer;
         }
     </style>
+    
 <body>
     <div>
         <div style='position: fixed; bottom: 16px; right: 16px; z-index:2';>
@@ -61,13 +62,13 @@
 
         var vetorCores = ['red', 'green', 'yellow', 'orange', 'blue', 'purple'];
         var vetorObjeto = ['Cubo', 'Esfera', 'Cilindro', 'Cone', 'Dodecaedro', 'Icosaedro'];
-        var vetorGeometria = [new THREE.BoxGeometry( .5, .5, .5 ), new THREE.SphereGeometry(.3, 32, 32 ), new THREE.CylinderGeometry( .3, .3, .8, radialSegments = 32 ), new THREE.ConeGeometry( .3, .4, 32 ), new THREE.DodecahedronGeometry( .3 ), new THREE.IcosahedronGeometry( .3 )];
+        var vetorGeometria = [new THREE.BoxGeometry( .3, .3, .3 ), new THREE.SphereGeometry(.3, 32, 32 ), new THREE.CylinderGeometry( .3, .3, .8, radialSegments = 32 ), new THREE.ConeGeometry( .3, .4, 32 ), new THREE.DodecahedronGeometry( .3 ), new THREE.IcosahedronGeometry( .3 )];
         var objetoColetado;
         
         let  sceneGroupHiro; 
         var escalaReseta=0;
         var contador = 0, contadorAux = 0;
-        var material = new THREE.MeshBasicMaterial( { color: "white" } );
+        var material = new THREE.MeshPhongMaterial( { color: "white" } );
         var objeto, torus, texto;
         var lastTimeMsec= null;
         var lastTime;
@@ -75,9 +76,7 @@
         var maxSubSteps = 3;    
         
         var vectorPosicao = new THREE.Vector3(), vectorScale = new THREE.Vector3(), vectorRotation = new THREE.Quaternion();;
-        var holder = new THREE.Object3D()
-        var scenaParaSalvar = new THREE.Group();
-        scenaParaSalvar.add(holder)
+        var vectorPosicaoPlano = new THREE.Vector3(), vectorRotationPlano = new THREE.Quaternion();
 
         initialize();
 
@@ -235,25 +234,16 @@
             ////////////////////////////////////////////////////////////
             // LUZ
             ////////////////////////////////////////////////////////////
-            light = new THREE.DirectionalLight( 0xFFFFFF );
-            light.position.set( 20, 40, -15 );
-            light.target.position.copy( scene.position );
+            light = new THREE.PointLight( 0xFFFFFF );
+            light.position.set(0, 2, 0);
             light.castShadow = true;
-            light.shadow.camera.left = -60;
-            light.shadow.camera.top = -60;
-            light.shadow.camera.right = 60;
-            light.shadow.camera.bottom = 60;
-            light.shadow.camera.near = 20;
-            light.shadow.camera.far = 200;
-            light.shadow.bias = -.0001
-            light.shadow.mapSize.width = light.shadow.mapSize.height = 2048;
             scene.add( light );
 
             ////////////////////////////////////////////////////////////
             // objetos do HIRO (seletor)
             ////////////////////////////////////////////////////////////
             var geometry = new THREE.TorusGeometry( .4, .02  , 16, 32 );
-            var material = new THREE.MeshBasicMaterial( { color: "lightgreen"} );
+            var material = new THREE.MeshPhongMaterial( { color: "lightgreen"} );
             torus = new THREE.Mesh( geometry, material );
             torus.position.y = .1;
             torus.position.z = -2;
@@ -266,14 +256,15 @@
             ////////////////////////////////////////////////////////////
 
             var geometry = new THREE.ConeGeometry(1, 2, 32);
-            var material = new THREE.MeshBasicMaterial( { color: "lightgreen" } );
+            var material = new THREE.MeshPhongMaterial( { color: "lightgreen" } );
             cone = new THREE.Mesh( geometry, material );
             cone.position.x = -0.4;
             cone.scale.set(.04,.04,.04);
             torus.add(cone);
-            var material = new THREE.MeshBasicMaterial( { color: "white" } );
+            var material = new THREE.MeshPhongMaterial( { color: "white" } );
             objeto = new THREE.Mesh( vetorGeometria[0], material );
-            objeto.position.y = .5;
+            objeto.position.y = .5; 
+            objeto.name = 'Cubo'
             marker4.add(objeto);
             carregaTexto('Cubo')
 
@@ -281,49 +272,126 @@
             // Seta os grupos com a área dos marcadores e computa o centro da área
             /////////////////////////////////////////////////////////////////////////
 
-            var arWorldRoot = new THREE.Group();
+            this.arWorldRoot = new THREE.Group();
             var averageMatrix = THREEx.ArMultiMarkerControls.computeCenter(multiMarkerFile);
-            averageMatrix.decompose(arWorldRoot.position, arWorldRoot.quaternion, arWorldRoot.scale);
-            smoothedRoot.add(arWorldRoot);
-            arWorldRoot.add(scenaParaSalvar);
+            averageMatrix.decompose( this.arWorldRoot.position,  this.arWorldRoot.quaternion,  this.arWorldRoot.scale);
+            smoothedRoot.add( this.arWorldRoot);
 
             /////////////////////////////////////////////////////////////////////////
             // Chão para sombra e colisões
             /////////////////////////////////////////////////////////////////////////
-            var geometry = new THREE.PlaneGeometry( 10, 5  );
-            var material = new THREE.MeshBasicMaterial( {color: 'grey'} );
+            var geometry = new THREE.PlaneGeometry( 200, 200  );
+            var material = new THREE.MeshPhongMaterial( {color: 'grey', wireframe:true} );
             this.plane = new THREE.Mesh( geometry, material );
             this.plane.receiveShadow = true;
             this.plane.rotation.x = -Math.PI/2;
             this.plane.position.y = .1;
-            arWorldRoot.add( plane );
+            this.arWorldRoot.add( plane );
+
             setupPhisics();
         }
 
 
-        function setupPhisics(){
+        function setupPhisics(){ 
             this.world = new CANNON.World();
             this.world.gravity.set(0,-9,0);
-            this.world.broadphase = new CANNON.NaiveBroadphase();            
+            this.world.broadphase = new CANNON.NaiveBroadphase();
             // Create a plane
-            this.groundBody = new CANNON.Body({
+            var groundBody = new CANNON.Body({
                 mass: 0 // mass == 0 makes the body static
             });
-            this.groundShape = new CANNON.Box(new CANNON.Vec3(10,.01,5));
+            var groundShape = new CANNON.Box(new CANNON.Vec3(200,.01,200));
             groundBody.addShape(groundShape);
             
             this.world.addBody(groundBody);
         }
-        function fiscaDoObjetoDaCena(){
-            // Create a sphere
-            var radius = 1; // m
-            this.sphereBody = new CANNON.Body({
-            mass: 5, // kg
-            position: new CANNON.Vec3(0, 10, 0), // m
-            shape: new CANNON.Sphere(radius)
+        function criarCubo(objetoColetadoBody){
+            var body = new CANNON.Body({
+            mass: 5,// kg
+            position: objetoColetadoBody.position, // m
+            quaternion: objetoColetadoBody.quaternion
             });
-            this.world.addBody(this.sphereBody);
+            var shape = new CANNON.Box(new CANNON.Vec3(objetoColetadoBody.scale.x,objetoColetadoBody.scale.y,objetoColetadoBody.scale.z)) 
+            body.addShape(shape);
+            this.world.addBody(body);
+
+            onRenderFcts.push(function(){
+                objetoColetadoBody.position.copy(body.position)
+                objetoColetadoBody.quaternion.copy(body.quaternion)
+            })
         }
+
+        function criarSphere(objetoColetadoBody){
+            var body = new CANNON.Body({
+            mass: 5, // kg
+            position: objetoColetadoBody.position, // m
+            quaternion: objetoColetadoBody.quaternion
+            });
+            var shape = new CANNON.Sphere(objetoColetadoBody.scale.x)
+            body.addShape(shape);
+            this.world.addBody(body);
+            onRenderFcts.push(function(){
+                objetoColetadoBody.position.copy(body.position)
+                objetoColetadoBody.quaternion.copy(body.quaternion)
+            })
+        }
+        function criarCilindro(objetoColetadoBody){
+            var body = new CANNON.Body({
+            mass: 5, // kg
+            position: objetoColetadoBody.position, // m
+            quaternion: objetoColetadoBody.quaternion
+            });
+            var shape = new CANNON.Cylinder(objetoColetadoBody.radiusTop, objetoColetadoBody.radiusBottom, objetoColetadoBody.height, objetoColetadoBody.radialSegments)
+            body.addShape(shape);
+            this.world.addBody(body);    
+            onRenderFcts.push(function(){
+                objetoColetadoBody.position.copy(body.position)
+                objetoColetadoBody.quaternion.copy(body.quaternion)
+            })        
+        }
+        function criarCone(objetoColetadoBody){
+            var body = new CANNON.Body({
+            mass: 5, // kg
+            position: objetoColetadoBody.position, // m
+            quaternion: objetoColetadoBody.quaternion
+            });
+            var shape = new CANNON.Cylinder(1, objetoColetadoBody.radiusBottom, objetoColetadoBody.height, objetoColetadoBody.radialSegments)
+            body.addShape(shape);
+            this.world.addBody(body);  
+            onRenderFcts.push(function(){
+                objetoColetadoBody.position.copy(body.position)
+                objetoColetadoBody.quaternion.copy(body.quaternion)
+            })          
+        }
+        function criarDodecaedro(objetoColetadoBody){
+            var body = new CANNON.Body({
+            mass: 5, // kg
+            position: objetoColetadoBody.position, // m
+            quaternion: objetoColetadoBody.quaternion
+            });
+            var shape = new CANNON.Sphere(objetoColetadoBody.scale.x)
+            body.addShape(shape);
+            this.world.addBody(body);        
+            onRenderFcts.push(function(){
+                objetoColetadoBody.position.copy(body.position)
+                objetoColetadoBody.quaternion.copy(body.quaternion)
+            })      
+        }       
+        function criarIcosaedro(objetoColetadoBody){
+            var body = new CANNON.Body({
+            mass: 5, // kg
+            position: objetoColetadoBody.position, // m
+            quaternion: objetoColetadoBody.quaternion
+            });
+            var shape = new CANNON.Sphere(objetoColetadoBody.scale.x)
+            body.addShape(shape);
+            this.world.addBody(body);     
+            onRenderFcts.push(function(){
+                objetoColetadoBody.position.copy(body.position)
+                objetoColetadoBody.quaternion.copy(body.quaternion)
+            })      
+        }
+        
         function carregaTexto(palavra){
             marker4.remove(texto);
             var loader = new THREE.FontLoader();
@@ -353,11 +421,13 @@
                     contador--;
                 }
                 objeto = new THREE.Mesh( vetorGeometria[contador], material );
+                objeto.name = vetorObjeto[contador];
                 carregaTexto(vetorObjeto[contador])
             }else if(ev.which == 3){
                 contador++;
                 contador = contador % vetorGeometria.length
                 objeto = new THREE.Mesh( vetorGeometria[contador], material );
+                objeto.name = vetorObjeto[contador];
                 carregaTexto(vetorObjeto[contador])
             }
             objeto.position.y = .5;
@@ -415,10 +485,8 @@
                 this.world.step(fixedTimeStep);
             }
             //console.log("Sphere y position: " + this.sphereBody.position.y);
-            teste = new THREE.Vector3();
-            this.plane.getWorldPosition(teste)
-            //console.log("Plane position: " + teste.x);
-            this.groundBody.position = teste;
+           // console.log("Plane position: " + groundBody.position.x);
+            // 
 
             lastTime = this.time;
             // measure time
@@ -451,6 +519,7 @@
                 }else if(marker1.visible && objetoColetado == undefined){
                     objetoColetado = objeto.clone();
                     objetoColetado.material = objeto.material.clone();
+                    objetoColetado.name = objeto.name;
                     torus.add(objetoColetado);
                     objetoColetado.position.set(0,0,0)
                     objetoColetado.rotation.set(-Math.PI/2,0,0);
@@ -458,6 +527,7 @@
                     torus.remove(objetoColetado);
                     objetoColetado = objeto.clone();
                     objetoColetado.material = objeto.material.clone();
+                    objetoColetado.name = objeto.name;
                     torus.add(objetoColetado);
                     objetoColetado.position.set(0,0,0);
                     objetoColetado.rotation.set(-Math.PI/2,0,0);
@@ -477,14 +547,33 @@
                         clock.start()
                     }
                     if(clock.getElapsedTime()>5){
-
+                        var objetoParaCena = objetoColetado.clone();
                         objetoColetado.getWorldPosition(vectorPosicao)
                         objetoColetado.getWorldQuaternion(vectorRotation)
                         objetoColetado.getWorldScale(vectorScale)
-                        objetoParaCena.position.set(vectorPosicao.x,vectorPosicao.y, vectorPosicao.z)
+                        objetoParaCena.position.set(vectorPosicao.x,vectorPosicao.y+10, vectorPosicao.z)
                         objetoParaCena.setRotationFromQuaternion(vectorRotation)
                         objetoParaCena.scale.set(vectorScale.x,vectorScale.y, vectorScale.z)
-                        holder.add(objetoParaCena)
+                        objetoParaCena.name = objetoColetado.name;
+                        if(objetoParaCena.name == 'Cubo'){
+                            criarCubo(objetoParaCena);
+                        }else if(objetoParaCena.name == 'Esfera'){
+                            criarSphere(objetoParaCena);
+                        }else if(objetoParaCena.name == 'Cilindro'){
+                            console.log('oi2')
+                            criarCilindro(objetoParaCena);
+                        }else if(objetoParaCena.name == 'Icosaedro'){
+                            console.log('oi3')
+                            criarIcosaedro(objetoParaCena);
+                        }else if(objetoParaCena.name == 'Cone'){
+                            console.log('oi4')
+                            criarCone(objetoParaCena);
+                        }else if(objetoParaCena.name == 'Dodecaedro'){
+                            console.log('oi5')
+                            criarDodecaedro(objetoParaCena);
+                        }
+                        //console.log(this.arWorldRoot.getObjectByName('Cubo'))
+                        this.arWorldRoot.add(objetoParaCena)
                         clock.stop();
                     }
                 }else if(!markerKanji.visible){

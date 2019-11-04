@@ -551,7 +551,7 @@
                         objetoColetado.getWorldPosition(vectorPosicao)
                         objetoColetado.getWorldQuaternion(vectorRotation)
                         objetoColetado.getWorldScale(vectorScale)
-                        objetoParaCena.position.set(vectorPosicao.x,vectorPosicao.y+10, vectorPosicao.z)
+                        objetoParaCena.position.set(vectorPosicao.x,vectorPosicao.y+3, vectorPosicao.z)
                         objetoParaCena.setRotationFromQuaternion(vectorRotation)
                         objetoParaCena.scale.set(vectorScale.x,vectorScale.y, vectorScale.z)
                         objetoParaCena.name = objetoColetado.name;
@@ -560,16 +560,12 @@
                         }else if(objetoParaCena.name == 'Esfera'){
                             criarSphere(objetoParaCena);
                         }else if(objetoParaCena.name == 'Cilindro'){
-                            console.log('oi2')
                             criarCilindro(objetoParaCena);
                         }else if(objetoParaCena.name == 'Icosaedro'){
-                            console.log('oi3')
                             criarIcosaedro(objetoParaCena);
                         }else if(objetoParaCena.name == 'Cone'){
-                            console.log('oi4')
                             criarCone(objetoParaCena);
                         }else if(objetoParaCena.name == 'Dodecaedro'){
-                            console.log('oi5')
                             criarDodecaedro(objetoParaCena);
                         }
                         //console.log(this.arWorldRoot.getObjectByName('Cubo'))

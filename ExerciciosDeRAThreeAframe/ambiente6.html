@@ -321,7 +321,6 @@
             onRenderFcts.push(function(){
                 objetoColetadoBody.position.copy(body.position)
                 objetoColetadoBody.quaternion.copy(body.quaternion)
-                console.log('x: ' + objetoColetadoBody.position.x + ' y: ' + objetoColetadoBody.position.y + ' z: ' +objetoColetadoBody.position.z)
             })
         }
 
@@ -493,10 +492,6 @@
                 var dt = (this.time - lastTime) / 1000;
                 this.world.step(fixedTimeStep);
             }
-            //console.log("Sphere y position: " + this.sphereBody.position.y);
-           // console.log("Plane position: " + groundBody.position.x);
-            // 
-
             lastTime = this.time;
             // measure time
             lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
@@ -560,7 +555,6 @@
                         objetoParaCena.material = objetoColetado.material.clone();
                         objetoColetado.getWorldPosition(vectorPosicao)
                         var posicao = new THREE.Vector3(vectorPosicao.x - arWorldRoot.matrixWorld.elements[12], vectorPosicao.y - arWorldRoot.matrixWorld.elements[13], vectorPosicao.z - arWorldRoot.matrixWorld.elements[14])
-                        console.log(posicao)
                         objetoColetado.getWorldQuaternion(vectorRotation)
                         objetoColetado.getWorldScale(vectorScale)
                         objetoParaCena.position.set(posicao.x,posicao.y+5, posicao.z)
@@ -580,7 +574,6 @@
                         }else if(objetoParaCena.name == 'Dodecaedro'){
                             criarDodecaedro(objetoParaCena);
                         }
-                        //console.log(this.arWorldRoot.getObjectByName('Cubo'))
                         arWorldRoot.add(objetoParaCena)
                         clock.stop();
                     }

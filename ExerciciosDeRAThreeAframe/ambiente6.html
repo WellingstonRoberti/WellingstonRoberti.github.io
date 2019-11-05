@@ -284,7 +284,7 @@
             var material = new THREE.MeshPhongMaterial( {color: 'red', wireframe:true} );
             this.plane = new THREE.Mesh( geometry, material );
             this.plane.receiveShadow = true;
-            this.plane.rotation.x = -Math.PI/2;
+            //this.plane.rotation.x = -Math.PI/2;
             //this.plane.position.y = -1;
             arWorldRoot.add( this.plane );
 
@@ -294,18 +294,21 @@
 
         function setupPhisics(){ 
             this.world = new CANNON.World();
-            this.world.gravity.set(0,-9,72,0);
+            this.world.gravity.set(0,-9.72,0);
             this.world.broadphase = new CANNON.NaiveBroadphase();
             // Create a plane
             var groundBody = new CANNON.Body({
                 mass: 0, // mass == 0 makes the body static
             });
-            var groundShape = new CANNON.Box(new CANNON.Vec3(10, .1 ,5));
-            groundBody.quaternion.copy(this.plane.quaternion)
-            groundBody.position.copy(this.plane.position)
+            var groundShape = new CANNON.Plane();
             groundBody.addShape(groundShape);
-            
+            var rot = new CANNON.Vec3(1,0,0)
+            groundBody.quaternion.setFromAxisAngle(rot, -Math.PI/2)
             this.world.addBody(groundBody);
+            onRenderFcts.push(function(){
+                this.plane.position.copy(groundBody.position)
+                this.plane.quaternion.copy(groundBody.quaternion)
+            })
         }
         function criarCubo(objetoColetadoBody){
             var vec3 = new CANNON.Vec3(objetoColetadoBody.position.x,objetoColetadoBody.position.y,objetoColetadoBody.position.z)
@@ -314,7 +317,7 @@
             position: vec3, // m
             quaternion: objetoColetadoBody.quaternion
             });
-            var shape = new CANNON.Box(new CANNON.Vec3(objetoColetadoBody.scale.x,objetoColetadoBody.scale.y,objetoColetadoBody.scale.z)) 
+            var shape = new CANNON.Box(new CANNON.Vec3(.3+escalaReseta,.3+escalaReseta,.3+escalaReseta)) 
             body.addShape(shape);
             this.world.addBody(body);
 
@@ -331,7 +334,7 @@
             position: objetoColetadoBody.position, // m
             quaternion: objetoColetadoBody.quaternion
             });
-            var shape = new CANNON.Sphere(objetoColetadoBody.scale.x)
+            var shape = new CANNON.Sphere(.3+escalaReseta)
             body.addShape(shape);
             this.world.addBody(body);
             onRenderFcts.push(function(){
@@ -373,7 +376,7 @@
             position: objetoColetadoBody.position, // m
             quaternion: objetoColetadoBody.quaternion
             });
-            var shape = new CANNON.Sphere(objetoColetadoBody.scale.x)
+            var shape = new CANNON.Sphere(.3+escalaReseta)
             body.addShape(shape);
             this.world.addBody(body);        
             onRenderFcts.push(function(){
@@ -387,7 +390,7 @@
             position: objetoColetadoBody.position, // m
             quaternion: objetoColetadoBody.quaternion
             });
-            var shape = new CANNON.Sphere(objetoColetadoBody.scale.x)
+            var shape = new CANNON.Sphere(.3+escalaReseta)
             body.addShape(shape);
             this.world.addBody(body);     
             onRenderFcts.push(function(){
@@ -553,11 +556,11 @@
                     if(clock.getElapsedTime()>5){
                         var objetoParaCena = objetoColetado.clone();
                         objetoColetado.getWorldPosition(vectorPosicao)
-                        var posicao = new THREE.Vector3(arWorldRoot.matrixWorld.elements[12] - vectorPosicao.x, arWorldRoot.matrixWorld.elements[13] - vectorPosicao.y, arWorldRoot.matrixWorld.elements[14] - vectorPosicao.z)
+                        var posicao = new THREE.Vector3(vectorPosicao.x - arWorldRoot.matrixWorld.elements[12], vectorPosicao.y - arWorldRoot.matrixWorld.elements[13], vectorPosicao.z - arWorldRoot.matrixWorld.elements[14])
                         console.log(posicao)
                         objetoColetado.getWorldQuaternion(vectorRotation)
                         objetoColetado.getWorldScale(vectorScale)
-                        objetoParaCena.position.set(posicao.x,posicao.y+2, posicao.z)
+                        objetoParaCena.position.set(posicao.x,posicao.y+5, posicao.z)
                         objetoParaCena.setRotationFromQuaternion(vectorRotation)
                         objetoParaCena.scale.set(vectorScale.x,vectorScale.y, vectorScale.z)
                         objetoParaCena.name = objetoColetado.name;

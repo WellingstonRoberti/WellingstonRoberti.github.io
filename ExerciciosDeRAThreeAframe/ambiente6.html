@@ -64,7 +64,8 @@
         var vetorObjeto = ['Cubo', 'Esfera', 'Cilindro', 'Cone', 'Dodecaedro', 'Icosaedro'];
         var vetorGeometria = [new THREE.BoxGeometry( .3, .3, .3 ), new THREE.SphereGeometry(.3, 32, 32 ), new THREE.CylinderGeometry( .3, .3, .8, radialSegments = 32 ), new THREE.ConeGeometry( .3, .4, 32 ), new THREE.DodecahedronGeometry( .3 ), new THREE.IcosahedronGeometry( .3 )];
         var objetoColetado;
-        
+        var arWorldRoot = new THREE.Group();
+
         let  sceneGroupHiro; 
         var escalaReseta=0;
         var contador = 0, contadorAux = 0;
@@ -272,45 +273,45 @@
             // Seta os grupos com a área dos marcadores e computa o centro da área
             /////////////////////////////////////////////////////////////////////////
 
-            this.arWorldRoot = new THREE.Group();
             var averageMatrix = THREEx.ArMultiMarkerControls.computeCenter(multiMarkerFile);
-            averageMatrix.decompose( this.arWorldRoot.position,  this.arWorldRoot.quaternion,  this.arWorldRoot.scale);
-            smoothedRoot.add( this.arWorldRoot);
+            averageMatrix.decompose( arWorldRoot.position,  arWorldRoot.quaternion,  arWorldRoot.scale);
+            smoothedRoot.add( arWorldRoot);
 
             /////////////////////////////////////////////////////////////////////////
             // Chão para sombra e colisões
             /////////////////////////////////////////////////////////////////////////
-            var geometry = new THREE.PlaneGeometry( 10, 5, 10,5  );
+            var geometry = new THREE.PlaneGeometry( 10, 5, 10, 5 );
             var material = new THREE.MeshPhongMaterial( {color: 'red', wireframe:true} );
             this.plane = new THREE.Mesh( geometry, material );
             this.plane.receiveShadow = true;
             this.plane.rotation.x = -Math.PI/2;
-            //this.plane.position.y = .1;
-            this.arWorldRoot.add( plane );
+            //this.plane.position.y = -1;
+            arWorldRoot.add( this.plane );
 
             setupPhisics();
         }
-        onRenderFcts.push(function(){
-            console.log(this.arWorldRoot.position.distanceTo(markerHiro.position))
-        })
+
 
         function setupPhisics(){ 
             this.world = new CANNON.World();
-            this.world.gravity.set(0,-9,0);
+            this.world.gravity.set(0,-9,72,0);
             this.world.broadphase = new CANNON.NaiveBroadphase();
             // Create a plane
             var groundBody = new CANNON.Body({
-                mass: 0 // mass == 0 makes the body static
+                mass: 0, // mass == 0 makes the body static
             });
-            var groundShape = new CANNON.Box(new CANNON.Vec3(200,.01,200));
+            var groundShape = new CANNON.Box(new CANNON.Vec3(10, .1 ,5));
+            groundBody.quaternion.copy(this.plane.quaternion)
+            groundBody.position.copy(this.plane.position)
             groundBody.addShape(groundShape);
             
             this.world.addBody(groundBody);
         }
         function criarCubo(objetoColetadoBody){
+            var vec3 = new CANNON.Vec3(objetoColetadoBody.position.x,objetoColetadoBody.position.y,objetoColetadoBody.position.z)
             var body = new CANNON.Body({
             mass: 5,// kg
-            position: objetoColetadoBody.position, // m
+            position: vec3, // m
             quaternion: objetoColetadoBody.quaternion
             });
             var shape = new CANNON.Box(new CANNON.Vec3(objetoColetadoBody.scale.x,objetoColetadoBody.scale.y,objetoColetadoBody.scale.z)) 
@@ -320,6 +321,7 @@
             onRenderFcts.push(function(){
                 objetoColetadoBody.position.copy(body.position)
                 objetoColetadoBody.quaternion.copy(body.quaternion)
+                console.log('x: ' + objetoColetadoBody.position.x + ' y: ' + objetoColetadoBody.position.y + ' z: ' +objetoColetadoBody.position.z)
             })
         }
 
@@ -502,7 +504,7 @@
 	    })
 
         function aprender(){
-                var learnerURL = 'https://wellingstonroberti.github.io/ExerciciosDeRAThreeAframe/three.js/examples/multi-markers/examples/learnerAmbiente6.html'
+                var learnerURL = 'http://127.0.0.1:5500/ExerciciosDeRAThreeAframe/three.js/examples/multi-markers/examples/learnerAmbiente6.html'
                 THREEx.ArMultiMarkerUtils.navigateToLearnerPage(learnerURL, arToolkitContext.parameters.trackingBackend)
         }
 
@@ -551,9 +553,11 @@
                     if(clock.getElapsedTime()>5){
                         var objetoParaCena = objetoColetado.clone();
                         objetoColetado.getWorldPosition(vectorPosicao)
+                        var posicao = new THREE.Vector3(arWorldRoot.matrixWorld.elements[12] - vectorPosicao.x, arWorldRoot.matrixWorld.elements[13] - vectorPosicao.y, arWorldRoot.matrixWorld.elements[14] - vectorPosicao.z)
+                        console.log(posicao)
                         objetoColetado.getWorldQuaternion(vectorRotation)
                         objetoColetado.getWorldScale(vectorScale)
-                        objetoParaCena.position.set(vectorPosicao.x,vectorPosicao.y+3, vectorPosicao.z)
+                        objetoParaCena.position.set(posicao.x,posicao.y+2, posicao.z)
                         objetoParaCena.setRotationFromQuaternion(vectorRotation)
                         objetoParaCena.scale.set(vectorScale.x,vectorScale.y, vectorScale.z)
                         objetoParaCena.name = objetoColetado.name;
@@ -571,16 +575,16 @@
                             criarDodecaedro(objetoParaCena);
                         }
                         //console.log(this.arWorldRoot.getObjectByName('Cubo'))
-                        this.arWorldRoot.add(objetoParaCena)
+                        arWorldRoot.add(objetoParaCena)
                         clock.stop();
                     }
                 }else if(!markerKanji.visible){
                     clock.stop();
                 }else if(markerKanji.visible && objetoColetado == undefined){
                     alert('Objeto não coletado!!')
-                }
+                 }
         });
-        
+
         function exportar(){
             // Instantiate a exporter
             var exporter = new THREE.GLTFExporter();

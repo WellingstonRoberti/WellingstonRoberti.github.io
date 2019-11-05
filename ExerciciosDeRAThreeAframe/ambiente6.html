@@ -308,13 +308,13 @@
             this.world.addBody(groundBody);
         }
         function criarCubo(objetoColetadoBody){
-            var vec3 = new CANNON.Vec3(objetoColetadoBody.position.x,objetoColetadoBody.position.y,objetoColetadoBody.position.z)
             var body = new CANNON.Body({
             mass: 5,// kg
-            position: vec3, // m
+            position: objetoColetadoBody.position, // m
             quaternion: objetoColetadoBody.quaternion
             });
-            var shape = new CANNON.Box(new CANNON.Vec3(.3+escalaReseta,.3+escalaReseta,.3+escalaReseta)) 
+            var shape = new CANNON.Box(new CANNON.Vec3(.3,.3,.3)) 
+            shape.halfExtents.set(objetoColetadoBody.scale.x,objetoColetadoBody.scale.y,objetoColetadoBody.scale.z);
             body.addShape(shape);
             this.world.addBody(body);
 
@@ -331,7 +331,8 @@
             position: objetoColetadoBody.position, // m
             quaternion: objetoColetadoBody.quaternion
             });
-            var shape = new CANNON.Sphere(.3+escalaReseta)
+            var shape = new CANNON.Sphere(.3)
+            shape.halfExtents.set(objetoColetadoBody.scale.x,objetoColetadoBody.scale.y,objetoColetadoBody.scale.z);
             body.addShape(shape);
             this.world.addBody(body);
             onRenderFcts.push(function(){
@@ -345,7 +346,8 @@
             position: objetoColetadoBody.position, // m
             quaternion: objetoColetadoBody.quaternion
             });
-            var shape = new CANNON.Cylinder(objetoColetadoBody.radiusTop, objetoColetadoBody.radiusBottom, objetoColetadoBody.height, objetoColetadoBody.radialSegments)
+            var shape = new CANNON.Cylinder(.3, .3, .8, 32 )
+            shape.halfExtents.set(objetoColetadoBody.scale.x,objetoColetadoBody.scale.y,objetoColetadoBody.scale.z);
             body.addShape(shape);
             this.world.addBody(body);    
             onRenderFcts.push(function(){
@@ -359,7 +361,8 @@
             position: objetoColetadoBody.position, // m
             quaternion: objetoColetadoBody.quaternion
             });
-            var shape = new CANNON.Cylinder(1, objetoColetadoBody.radiusBottom, objetoColetadoBody.height, objetoColetadoBody.radialSegments)
+            var shape = new CANNON.Cylinder(0.0000001, .3, .4, 32 )           
+            shape.halfExtents.set(objetoColetadoBody.scale.x,objetoColetadoBody.scale.y,objetoColetadoBody.scale.z);
             body.addShape(shape);
             this.world.addBody(body);  
             onRenderFcts.push(function(){
@@ -373,7 +376,8 @@
             position: objetoColetadoBody.position, // m
             quaternion: objetoColetadoBody.quaternion
             });
-            var shape = new CANNON.Sphere(.3+escalaReseta)
+            var shape = new CANNON.Sphere(.3)
+            shape.halfExtents.set(objetoColetadoBody.scale.x,objetoColetadoBody.scale.y,objetoColetadoBody.scale.z);
             body.addShape(shape);
             this.world.addBody(body);        
             onRenderFcts.push(function(){
@@ -387,7 +391,8 @@
             position: objetoColetadoBody.position, // m
             quaternion: objetoColetadoBody.quaternion
             });
-            var shape = new CANNON.Sphere(.3+escalaReseta)
+            var shape = new CANNON.Sphere(.3)
+            shape.halfExtents.set(objetoColetadoBody.scale.x,objetoColetadoBody.scale.y,objetoColetadoBody.scale.z);
             body.addShape(shape);
             this.world.addBody(body);     
             onRenderFcts.push(function(){

@@ -572,7 +572,7 @@
                         var posicao = new THREE.Vector3(vectorPosicao.x - arWorldRoot.matrixWorld.elements[12], vectorPosicao.y - arWorldRoot.matrixWorld.elements[13], vectorPosicao.z - arWorldRoot.matrixWorld.elements[14])
                         objetoColetado.getWorldQuaternion(vectorRotation)
                         objetoColetado.getWorldScale(vectorScale)
-                        objetoParaCena.position.set(posicao.x,posicao.y+5, posicao.z)
+                        objetoParaCena.position.set(posicao.x,posicao.y+2, posicao.z)
                         objetoParaCena.setRotationFromQuaternion(vectorRotation)
                         objetoParaCena.scale.set(vectorScale.x,vectorScale.y, vectorScale.z)
                         objetoParaCena.name = objetoColetado.name;

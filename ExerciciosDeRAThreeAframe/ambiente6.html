@@ -289,6 +289,21 @@
             arWorldRoot.add( this.plane );
 
             setupPhisics();
+
+            // Your web app's Firebase configuration
+            var firebaseConfig = {
+                apiKey: "AIzaSyD8gmNDdRR4ljQ8CyFXpYT2fnHC5ktaIKo",
+                authDomain: "rvviewer.firebaseapp.com",
+                databaseURL: "https://rvviewer.firebaseio.com",
+                projectId: "rvviewer",
+                storageBucket: "rvviewer.appspot.com",
+                messagingSenderId: "585376937065",
+                appId: "1:585376937065:web:5083214174bfe70f8a5ef8",
+                measurementId: "G-N5572QF677"
+            };
+            // Initialize Firebase
+
+            firebase.initializeApp(firebaseConfig);
         }
 
 
@@ -609,21 +624,6 @@
 
         function grava() {
             file = new Blob( [output], { type: "text/json" } );
-
-            // Your web app's Firebase configuration
-            var firebaseConfig = {
-                apiKey: "AIzaSyD8gmNDdRR4ljQ8CyFXpYT2fnHC5ktaIKo",
-                authDomain: "rvviewer.firebaseapp.com",
-                databaseURL: "https://rvviewer.firebaseio.com",
-                projectId: "rvviewer",
-                storageBucket: "rvviewer.appspot.com",
-                messagingSenderId: "585376937065",
-                appId: "1:585376937065:web:5083214174bfe70f8a5ef8",
-                measurementId: "G-N5572QF677"
-            };
-            // Initialize Firebase
-
-            firebase.initializeApp(firebaseConfig);
 
             var storage = firebase.storage();
             // Create a root reference
